@@ -14,7 +14,10 @@ body{margin:0;background:#000}
 html{scroll-behavior:smooth}
 </style>
 </helmet>
-<div style="width: 1440px; zoom: {{ zoom }}; background: #f9f5f5; color: #000; font-family: 'Host Grotesk', system-ui, sans-serif">
+<div style="width: {{ rootW }}px; zoom: {{ zoom }}; background: #f9f5f5; color: #000; font-family: 'Host Grotesk', system-ui, sans-serif">
+
+  <!-- ==================== DESKTOP (largura de desenho 1440) ==================== -->
+  <sc-if value="{{ desk }}" hint-placeholder-val="{{ true }}">
 
   <!-- HEADER FIXO: os links seguem a rolagem -->
   <nav aria-label="Principal" style="position: fixed; top: 24px; right: 26px; z-index: 30; padding: 10px 14px; background: {{ navBg }}">
@@ -211,6 +214,168 @@ html{scroll-behavior:smooth}
       </div>
     </div>
   </sc-if>
+  </sc-if>
+
+  <!-- ==================== CELULAR (largura de desenho 390; abaixo de 760 px de janela) ====================
+       Mesmo conteúdo do desktop, reorganizado em uma coluna: projetos empilhados, About com a linha do tempo na vertical,
+       galeria do projeto rolando para baixo (como a Superside faz no celular) e rodapé empilhado. -->
+  <sc-if value="{{ mob }}" hint-placeholder-val="{{ false }}">
+
+  <nav aria-label="Principal" style="position: fixed; top: 12px; right: 10px; z-index: 30; padding: 8px 10px; background: {{ navBg }}">
+    <ul style="display: flex; gap: 16px; list-style: none; margin: 0; padding: 0; font-size: 11px; font-weight: 800; text-transform: uppercase">
+      <sc-for list="{{ nav }}" as="n" hint-placeholder-count="3">
+        <li style="opacity: {{ n.o }}; transform: translateY({{ n.dy }}px)">
+          <a href="{{ n.href }}" style="display: inline-flex; align-items: center; gap: 5px; color: #fe0000; text-decoration: none">
+            <span aria-hidden="true" style="width: 5px; height: 5px; background: #fe0000; transform: rotate(45deg); opacity: {{ n.on }}"></span>{{ n.label }}
+          </a>
+        </li>
+      </sc-for>
+    </ul>
+  </nav>
+
+  <!-- 01 HOME: a mesma abertura, com o logo em escala de celular e altura da tela -->
+  <header id="topo" style="position: relative; height: {{ hero.h }}px; overflow: hidden; background: {{ hero.bg }}">
+    <img src="/_blob/f58df74353a40529183de8d338f66b68" alt="" style="position: absolute; left: 0; top: 0; width: 2px; height: 2px; opacity: 0">
+    <img src="/_blob/969a84877293762082cde8c364b566b9" alt="" style="position: absolute; left: 0; top: 0; width: 2px; height: 2px; opacity: 0">
+    <img src="/_blob/b5eb09e0ad93304d2f7d639b307b1cec" alt="" style="position: absolute; left: 0; top: 0; width: 2px; height: 2px; opacity: 0">
+    <img src="/_blob/d19932d0d00c72ad71a1e3c025d3c66f" alt="" style="position: absolute; left: 0; top: 0; width: 2px; height: 2px; opacity: 0">
+    <img src="/_blob/290c2b75dc1a9808de46f4d1a716bb28" alt="" style="position: absolute; left: 0; top: 0; width: 2px; height: 2px; opacity: 0">
+    <img src="/_blob/b4f44df9f0d56bd478f540796d734b72" alt="" style="position: absolute; left: 0; top: 0; width: 2px; height: 2px; opacity: 0">
+    <h1 aria-label="Design by Nero" style="margin: 0">
+      <sc-for list="{{ hero.glyphs }}" as="g" hint-placeholder-count="13">
+        <div style="position: absolute; left: {{ g.x }}px; top: {{ g.y }}px; width: {{ g.w }}px; height: {{ g.h }}px; overflow: hidden; opacity: {{ g.o }}; clip-path: {{ g.clip }}">
+          <img src="{{ g.src }}" alt="" style="position: absolute; left: {{ g.ix }}px; top: {{ g.iy }}px; width: {{ g.iw }}px; height: {{ g.ih }}px; max-width: none">
+        </div>
+      </sc-for>
+    </h1>
+    <div style="position: absolute; left: {{ hero.cursor.x }}px; top: {{ hero.cursor.y }}px; width: {{ hero.cursor.w }}px; height: {{ hero.cursor.h }}px; background: #fe0000; opacity: {{ hero.cursor.o }}"></div>
+  </header>
+
+  <!-- 02 WORK: uma coluna; nome e categoria na mesma linha, embaixo da capa -->
+  <section id="trabalhos" ref="{{ workRef }}" aria-label="Selected work" style="position: relative; height: {{ work.h }}px; background: #f9f5f5; transition: height .7s cubic-bezier(.16,1,.3,1)">
+    <h2 style="position: absolute; left: 20px; top: 56px; margin: 0; font-family: Anton, Impact, sans-serif; font-weight: 400; font-size: 40px; line-height: 0.9; text-transform: uppercase; display: flex; gap: 10px">
+      <span style="opacity: {{ work.head1 }}">Selected</span><span style="opacity: {{ work.head2 }}">work</span>
+    </h2>
+    <div style="position: absolute; left: 20px; top: 112px; width: 350px; display: flex; flex-wrap: wrap; gap: 6px">
+      <sc-for list="{{ chips }}" as="c" hint-placeholder-count="4">
+        <button type="button" onClick="{{ c.pick }}" style="height: 34px; padding: 0 10px; border: 0; background: {{ c.bg }}; color: {{ c.fg }}; font-family: 'Martian Mono', monospace; font-size: 10px; cursor: pointer">[ {{ c.label }} ]</button>
+      </sc-for>
+    </div>
+    <sc-for list="{{ work.cards }}" as="k" hint-placeholder-count="3">
+      <a href="{{ k.href }}" onClick="{{ k.open }}" style="position: absolute; left: {{ k.x }}px; top: {{ k.y }}px; width: 350px; height: 262px; display: {{ k.display }}; color: #000; text-decoration: none">
+        <div style="position: relative; width: 350px; height: 210px; overflow: hidden; background: #d0d0d0">
+          <img src="{{ k.img }}" alt="{{ k.alt }}" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: {{ k.imgO }}">
+          <div style="position: absolute; left: 0; top: 0; width: 350px; height: 105px; background: #000; opacity: {{ k.blockO }}; transform: translateY({{ k.up }}px)"></div>
+          <div style="position: absolute; left: 0; top: 105px; width: 350px; height: 105px; background: #000; opacity: {{ k.blockO }}; transform: translateY({{ k.down }}px)"></div>
+        </div>
+        <div style="position: absolute; left: 0; top: 224px; font-family: Anton, Impact, sans-serif; font-size: 24px; line-height: 1; text-transform: uppercase; white-space: nowrap">{{ k.typed }}<span aria-hidden="true" style="color: #fe0000; opacity: {{ k.cur }}">_</span></div>
+        <span style="position: absolute; right: 0; top: 233px; font-family: 'Martian Mono', monospace; font-size: 9px; color: #4f4f4f; white-space: nowrap; opacity: {{ k.metaO }}">{{ k.meta }}</span>
+      </a>
+    </sc-for>
+  </section>
+
+  <!-- 03 CLIENTS: a mesma esteira, com logos menores; dá para arrastar com o dedo -->
+  <section aria-label="Clients" style="position: relative; height: 136px; background: #f9f5f5">
+    <div ref="{{ mqRef }}" style="position: absolute; left: 0; top: 28px; width: 390px; height: 72px; box-sizing: border-box; border-top: 1px solid rgba(0,0,0,.15); border-bottom: 1px solid rgba(0,0,0,.15); overflow: hidden; cursor: {{ mqCursor }}; touch-action: pan-y; user-select: none; -webkit-user-select: none">
+      <sc-for list="{{ logos }}" as="l" hint-placeholder-count="18">
+        <img src="{{ l.src }}" alt="{{ l.alt }}" draggable="false" style="position: absolute; left: {{ l.x }}px; top: {{ l.top }}px; width: {{ l.w }}px; height: {{ l.h }}px; pointer-events: none">
+      </sc-for>
+    </div>
+  </section>
+
+  <!-- 04 ABOUT ME: título, texto e foto; depois a linha do tempo desce na vertical, com a mesma ponta vermelha,
+       e termina na seta que aponta para o "Let's talk" -->
+  <section id="sobre" ref="{{ aboutRef }}" aria-label="About me" style="position: relative; height: 2620px; overflow: hidden; background: #f9f5f5">
+    <h2 style="position: absolute; left: 20px; top: 64px; margin: 0; font-family: Anton, Impact, sans-serif; font-weight: 400; font-size: 72px; line-height: 0.88; text-transform: uppercase">
+      <span style="display: block; opacity: {{ ma.h1o }}">About</span>
+      <span style="display: block; opacity: {{ ma.h2o }}">me</span>
+    </h2>
+    <p style="position: absolute; left: 20px; top: 214px; width: 350px; margin: 0; font-size: 12px; font-weight: 800; text-transform: uppercase; opacity: {{ ma.bioO }}">Gabriel Nero — Visual designer &amp; creative strategist</p>
+    <p style="position: absolute; left: 20px; top: 242px; width: 350px; margin: 0; font-size: 15px; line-height: 21px; text-transform: uppercase; opacity: {{ ma.bioO }}">Graphic designer creating visual identities, campaigns and digital pieces for brands, from research and concept to visual experimentation.</p>
+    <span style="position: absolute; left: 20px; top: 362px; font-family: 'Martian Mono', monospace; font-size: 10px; line-height: 1.7; color: #4f4f4f; opacity: {{ ma.eduO }}">MARINGÁ — PR, BRAZIL<br>COMMUNICATION &amp; MULTIMEDIA — UNICESUMAR, 2023–2026</span>
+    <div ref="{{ mphotoRef }}" style="position: absolute; left: 20px; top: 430px; width: 350px; height: 622px; background: #d0d0d0; clip-path: inset(0 0 {{ ma.photoClip }}% 0); overflow: hidden">
+      <img src="/_blob/479603dfff543771dbfd23f724d36e4f" alt="Gabriel Nero trabalhando no computador" loading="lazy" style="display: block; width: 100%; height: 100%; object-fit: cover">
+    </div>
+    <svg width="374" height="646" viewBox="0 0 374 646" aria-hidden="true" style="position: absolute; left: 8px; top: 418px; overflow: visible; opacity: {{ ma.focusO }}; transform: scale({{ ma.focusS }}); transform-origin: 50% 50%"><path d="M0 16 V0 H16 M358 0 H374 V16 M374 630 V646 H358 M16 646 H0 V630" stroke="#fe0000" stroke-width="2" fill="none"></path></svg>
+
+    <div ref="{{ mlineRef }}" style="position: absolute; left: 0; top: 1110px; width: 390px; height: 1410px">
+      <div style="position: absolute; left: 27px; top: 0; height: 1260px; border-left: 1.5px dashed rgba(0,0,0,.35)"></div>
+      <div style="position: absolute; left: 26px; top: 0; width: 2px; height: {{ ma.progH }}px; background: {{ ma.lineBg }}"></div>
+      <div style="position: absolute; left: 26px; top: {{ ma.flY }}px; width: 2px; height: {{ ma.flH }}px; background: #fe0000; box-shadow: 0 0 10px rgba(254, 0, 0, 0.55); opacity: {{ ma.flO }}"></div>
+      <svg width="20" height="40" viewBox="0 0 20 40" aria-hidden="true" style="position: absolute; left: 17px; top: 1256px; opacity: {{ ma.headO }}; transform: scale({{ ma.headS }}); transform-origin: 50% 0"><path d="M1 0 L10 40 L19 0 L10 9 Z" fill="#fe0000"></path></svg>
+      <sc-for list="{{ ma.stops }}" as="s" hint-placeholder-count="4">
+        <div style="position: absolute; left: 0; top: {{ s.y }}px; width: 390px; height: 0">
+          <div style="position: absolute; left: 17px; top: -10px; width: 20px; height: 20px; box-sizing: border-box; border-radius: 50%; border: 3px solid {{ s.ring }}; background: {{ s.fill }}"></div>
+          <div style="position: absolute; left: 52px; top: -34px; font-family: Anton, Impact, sans-serif; font-size: 72px; line-height: 0.9; color: {{ s.color }}; transition: color .3s">{{ s.year }}</div>
+          <span style="position: absolute; left: 52px; top: 42px; font-family: 'Martian Mono', monospace; font-size: 11px; color: #4f4f4f; white-space: nowrap">{{ s.period }}</span>
+          <span style="position: absolute; left: 52px; top: 64px; font-size: 13px; font-weight: 800; text-transform: uppercase; white-space: nowrap">{{ s.company }} — Graphic designer</span>
+          <div style="position: absolute; left: 52px; top: 88px; width: 318px; display: flex; flex-direction: column; gap: 8px">
+            <p style="margin: 0; font-size: 14px; line-height: 19px; text-transform: uppercase; color: #4f4f4f">{{ s.text }}</p>
+            <span style="font-family: 'Martian Mono', monospace; font-size: 9px; line-height: 1.6; color: #000">{{ s.tags }}</span>
+          </div>
+        </div>
+      </sc-for>
+      <a href="#contato" aria-label="Contact — let's talk" style="position: absolute; left: 6px; top: 1304px; display: block; padding: 12px 16px; color: #000; text-decoration: none">
+        <span style="display: block; font-family: Anton, Impact, sans-serif; font-size: 44px; line-height: 0.9; text-transform: uppercase; white-space: nowrap; color: {{ ma.ctaColor }}">Let’s talk</span>
+        <span aria-hidden="true" style="position: absolute; left: 0; top: 0; width: 12px; height: 12px; border-left: 2px solid #fe0000; border-top: 2px solid #fe0000; opacity: {{ ma.ctaO }}"></span>
+        <span aria-hidden="true" style="position: absolute; right: 0; top: 0; width: 12px; height: 12px; border-right: 2px solid #fe0000; border-top: 2px solid #fe0000; opacity: {{ ma.ctaO }}"></span>
+        <span aria-hidden="true" style="position: absolute; left: 0; bottom: 0; width: 12px; height: 12px; border-left: 2px solid #fe0000; border-bottom: 2px solid #fe0000; opacity: {{ ma.ctaO }}"></span>
+        <span aria-hidden="true" style="position: absolute; right: 0; bottom: 0; width: 12px; height: 12px; border-right: 2px solid #fe0000; border-bottom: 2px solid #fe0000; opacity: {{ ma.ctaO }}"></span>
+      </a>
+    </div>
+  </section>
+
+  <!-- 05 FOOTER: redes em cima à esquerda, Work/About me em cima à direita, sticker no meio (dá para puxar com o dedo),
+       e-mail, back to top e hora embaixo -->
+  <footer id="contato" ref="{{ footRef }}" style="position: relative; height: 600px; overflow: hidden; background: #000; color: #f9f5f5; touch-action: pan-y">
+    <canvas ref="{{ cvRef }}" width="1520" height="920" role="img" aria-label="Design by Nero" style="position: absolute; left: 20px; top: 140px; width: 350px; height: 212px; pointer-events: none"></canvas>
+    <ul style="position: absolute; left: 20px; top: 32px; list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 800; text-transform: uppercase">
+      <li><a href="https://www.instagram.com/neeroxvi/" target="_blank" rel="noopener" style="color: #f9f5f5; text-decoration: none">Instagram</a></li>
+      <li><a href="https://www.behance.net/neeroxvi" target="_blank" rel="noopener" style="color: #f9f5f5; text-decoration: none">Behance</a></li>
+      <li><a href="https://www.linkedin.com/in/gabrielnero/" target="_blank" rel="noopener" style="color: #f9f5f5; text-decoration: none">LinkedIn</a></li>
+    </ul>
+    <ul style="position: absolute; right: 20px; top: 32px; list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; align-items: flex-end; gap: 6px; font-size: 13px; font-weight: 800; text-transform: uppercase">
+      <li><a href="#trabalhos" style="color: #f9f5f5; text-decoration: none">Work</a></li>
+      <li><a href="#sobre" style="color: #f9f5f5; text-decoration: none">About me</a></li>
+    </ul>
+    <a href="mailto:gabrieldelnero.pessoal@gmail.com" style="position: absolute; left: 20px; top: 420px; font-size: 13px; font-weight: 800; text-transform: uppercase; color: #f9f5f5; text-decoration: none">gabrieldelnero.pessoal@gmail.com</a>
+    <a href="#topo" onClick="{{ backTop }}" style="position: absolute; left: 20px; top: 462px; font-size: 13px; font-weight: 800; text-transform: uppercase; white-space: nowrap; color: #f9f5f5; text-decoration: none">Back to top</a>
+    <span style="position: absolute; left: 20px; bottom: 28px; font-family: 'Martian Mono', monospace; font-size: 10px; color: #d0d0d0">LOCAL TIME — MARINGÁ {{ localTime }} (GMT−3)</span>
+  </footer>
+
+  <!-- PROJETO ABERTO no celular: camada em tela cheia; nome, categoria e texto no topo e as imagens empilhadas,
+       na largura da tela, rolando para baixo -->
+  <sc-if value="{{ ovm.on }}" hint-placeholder-val="{{ false }}">
+    <div role="dialog" aria-modal="true" aria-label="{{ ovm.name }}" style="position: fixed; left: 0; top: 0; width: 390px; height: {{ ovm.h }}px; z-index: 50; color: #f9f5f5; opacity: {{ ovm.o }}">
+      <div style="position: absolute; inset: 0; background: #000"></div>
+      <div style="position: absolute; left: 0; top: 0; width: 390px; height: 56px; box-sizing: border-box; display: flex; justify-content: space-between; align-items: center; padding: 0 10px 0 20px; font-family: 'Martian Mono', monospace; font-size: 11px">
+        <span style="color: #d0d0d0">{{ ovm.num }} / {{ ovm.total }}</span>
+        <div style="display: flex; gap: 2px; align-items: center">
+          <button type="button" aria-label="Previous project" onClick="{{ ovm.prev }}" style="height: 44px; min-width: 44px; padding: 0 8px; background: transparent; color: #f9f5f5; border: 0; font: inherit; font-size: 15px; cursor: pointer">←</button>
+          <button type="button" aria-label="Next project" onClick="{{ ovm.next }}" style="height: 44px; min-width: 44px; padding: 0 8px; background: transparent; color: #f9f5f5; border: 0; font: inherit; font-size: 15px; cursor: pointer">→</button>
+          <a href="{{ ovm.href }}" target="_blank" rel="noopener" aria-label="Behance" style="display: inline-flex; align-items: center; justify-content: center; height: 44px; min-width: 44px; color: #f9f5f5; text-decoration: none; font-size: 15px">↗</a>
+          <button type="button" aria-label="Close" onClick="{{ ovm.close }}" style="height: 44px; min-width: 44px; padding: 0 8px; background: #fe0000; color: #000; border: 0; font: inherit; font-size: 15px; cursor: pointer">✕</button>
+        </div>
+      </div>
+      <div ref="{{ ovmRef }}" style="position: absolute; left: 0; top: 56px; width: 390px; height: {{ ovm.bodyH }}px; overflow-y: auto; overscroll-behavior: contain; transform: translateY({{ ovm.dy }}px)">
+        <div style="padding: 16px 20px 0">
+          <h3 style="margin: 0; font-family: Anton, Impact, sans-serif; font-weight: 400; font-size: 40px; line-height: 0.92; text-transform: uppercase">{{ ovm.name }}</h3>
+          <span style="display: block; margin-top: 10px; font-family: 'Martian Mono', monospace; font-size: 10px; color: #d0d0d0">[ {{ ovm.cat }} ]</span>
+          <p style="margin: 14px 0 0; font-size: 14px; line-height: 1.5; color: #d0d0d0">{{ ovm.desc }}</p>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 12px; padding: 22px 20px 0">
+          <sc-for list="{{ ovm.imgs }}" as="m" hint-placeholder-count="4">
+            <img src="{{ m.src }}" alt="{{ m.alt }}" loading="lazy" decoding="async" style="display: block; width: 350px; height: {{ m.h }}px; object-fit: cover; background: #141414; opacity: {{ m.o }}; transform: translateY({{ m.dy }}px)">
+          </sc-for>
+        </div>
+        <div style="display: flex; justify-content: space-between; padding: 20px 10px 40px; font-family: 'Martian Mono', monospace; font-size: 11px">
+          <button type="button" onClick="{{ ovm.prev }}" style="height: 44px; padding: 0 10px; background: transparent; color: #f9f5f5; border: 0; font: inherit; cursor: pointer">[ ← PREV ]</button>
+          <button type="button" onClick="{{ ovm.next }}" style="height: 44px; padding: 0 10px; background: transparent; color: #f9f5f5; border: 0; font: inherit; cursor: pointer">[ NEXT → ]</button>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+  </sc-if>
 </div>
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":5396}}'>
@@ -225,8 +390,9 @@ const lerp = (a, b, k) => a + (b - a) * k;
 const r2 = v => Math.round(v * 100) / 100;
 
 // ---------- 01 HOME — a mesma abertura da prancha M1
-const HW = 1440, HH = 810, HT = 2.9, S = 0.72;
-const HLW = 746 * S, HLH = 487 * S, LX = (HW - HLW) / 2, LY = (HH - HLH) / 2;
+// geometria da abertura: W × H da tela de desenho, S = escala do logo (746 × 487 no PNG), M = margem dos cantos
+const HT = 2.9;
+const GEO_D = { W: 1440, H: 810, S: 0.72, M: 48 };
 const SRC = { red: '/_blob/f58df74353a40529183de8d338f66b68', black: '/_blob/969a84877293762082cde8c364b566b9', paper: '/_blob/b5eb09e0ad93304d2f7d639b307b1cec' };
 const SRC_R = { red: '/_blob/d19932d0d00c72ad71a1e3c025d3c66f', black: '/_blob/290c2b75dc1a9808de46f4d1a716bb28', paper: '/_blob/b4f44df9f0d56bd478f540796d734b72' };
 const BG = { paper: '#f9f5f5', red: '#fe0000', black: '#000000' };
@@ -238,18 +404,20 @@ const CLIP = { 7: 'polygon(0% 0%, 88.98% 0%, 95.76% 20.42%, 100% 23.75%, 100% 10
 const CORNER = [0, 7, 9, 6];
 const CSC = i => i === 6 ? 2.44 : 0.5;
 const bgAt = t => t < 0.55 ? 'paper' : t < 0.82 ? 'red' : t < 1.38 ? 'black' : t < 2.02 ? 'red' : 'paper';
-function heroGlyph(i, x, y, sc, o, ink) {
+function heroGlyph(i, x, y, sc, o, ink, S) {
   const g = G[i], w = (g[1] - g[0]) * S * sc, h = (g[3] - g[2]) * S * sc;
   if (i === 6) return { x: r2(x), y: r2(y), w: r2(w), h: r2(h), ix: 0, iy: 0, iw: r2(w), ih: r2(h), o: o, src: SRC_R[ink], clip: 'none' };
   return { x: r2(x), y: r2(y), w: r2(w), h: r2(h), ix: r2(-g[0] * S * sc), iy: r2(-g[2] * S * sc), iw: r2(746 * S * sc), ih: r2(487 * S * sc), o: o, src: SRC[ink], clip: CLIP[i] || 'none' };
 }
-function cornerBox(ci) {
-  const i = CORNER[ci], g = G[i], w = (g[1] - g[0]) * S * CSC(i), h = (g[3] - g[2]) * S * CSC(i);
+function cornerBox(ci, Q) {
+  const S = Q.S, i = CORNER[ci], g = G[i], w = (g[1] - g[0]) * S * CSC(i), h = (g[3] - g[2]) * S * CSC(i);
   const dy = i === 6 ? h * 5 / 56 : 0;
-  const pos = [[48, 48], [HW - 48 - w, 48], [48, HH - 48 - h + dy], [HW - 48 - w, HH - 48 - h + dy]][ci];
+  const pos = [[Q.M, Q.M], [Q.W - Q.M - w, Q.M], [Q.M, Q.H - Q.M - h + dy], [Q.W - Q.M - w, Q.H - Q.M - h + dy]][ci];
   return { x: pos[0], y: pos[1], w: w, h: h };
 }
-function heroAt(t) {
+function heroAt(t, Q) {
+  // f: os deslocamentos da animação acompanham o tamanho do logo
+  const S = Q.S, f = S / 0.72, LX = (Q.W - 746 * S) / 2, LY = (Q.H - 487 * S) / 2;
   const bg = bgAt(t), ink = INK[bg], out = [];
   for (let i = 0; i < 13; i++) {
     const g = G[i], hx = LX + g[0] * S, hy = LY + g[2] * S, w = (g[1] - g[0]) * S, h = (g[3] - g[2]) * S;
@@ -257,35 +425,35 @@ function heroAt(t) {
     let x = hx, y = hy, sc = 1, o = 1;
     if (t >= 0.30 && t < 0.82) {
       const k = t < 0.55 ? 120 * expo(seg(t, 0.30, 0.55)) : 120 + 80 * cubicOut(seg(t, 0.55, 0.82));
-      x = hx + dir * k * 0.5; y = hy + dir * k * 0.8;
+      x = hx + dir * k * 0.5 * f; y = hy + dir * k * 0.8 * f;
     } else if (t >= 0.82 && t < 2.02) {
       const ci = CORNER.indexOf(i);
       if (ci < 0 || t >= 1.38) { o = 0; }
-      else { const c = cornerBox(ci), q = expo(seg(t, 0.82, 1.04)); x = lerp(hx + dir * 100, c.x, q); y = lerp(hy + dir * 160, c.y, q); sc = lerp(1, CSC(i), q); }
+      else { const c = cornerBox(ci, Q), q = expo(seg(t, 0.82, 1.04)); x = lerp(hx + dir * 100 * f, c.x, q); y = lerp(hy + dir * 160 * f, c.y, q); sc = lerp(1, CSC(i), q); }
     } else if (t >= 2.02) {
       const d = i < 6 ? i : i - 1, q = seg(t, 2.02 + d * 0.018, 2.44 + d * 0.018), e = backOut(q);
-      sc = Math.max(0.04, lerp(0.04, 1, e)); x = lerp(HW / 2 - w * 0.02, hx, e); y = lerp(HH / 2 - h * 0.02, hy, e);
+      sc = Math.max(0.04, lerp(0.04, 1, e)); x = lerp(Q.W / 2 - w * 0.02, hx, e); y = lerp(Q.H / 2 - h * 0.02, hy, e);
       if (q <= 0) o = 0;
     }
     if (i === 6 && t >= 2.02) { if (t < 2.76) o = 0; else { x = hx; y = hy; sc = 1; o = 1; } }
-    out.push(heroGlyph(i, x, y, sc, o, ink));
+    out.push(heroGlyph(i, x, y, sc, o, ink, S));
   }
   if (t >= 1.38 && t < 2.02) {
     const n = 8, head = (n - 1) * cubicOut(seg(t, 1.38, 1.66)), tail = (n - 1) * seg(t, 1.70, 2.00);
     for (let ci = 0; ci < 4; ci++) {
-      const c = cornerBox(ci), i = CORNER[ci], ccx = c.x + c.w / 2, ccy = c.y + c.h / 2;
+      const c = cornerBox(ci, Q), i = CORNER[ci], ccx = c.x + c.w / 2, ccy = c.y + c.h / 2;
       for (let k = 0; k < n; k++) {
         if (k > head + 1e-6 || k < tail - 1e-6) continue;
-        const f = Math.pow(0.06, k / (n - 1)), sc = CSC(i) * f;
-        const cx = HW / 2 + (ccx - HW / 2) * f, cy = HH / 2 + (ccy - HH / 2) * f;
+        const fk = Math.pow(0.06, k / (n - 1)), sc = CSC(i) * fk;
+        const cx = Q.W / 2 + (ccx - Q.W / 2) * fk, cy = Q.H / 2 + (ccy - Q.H / 2) * fk;
         const w = (G[i][1] - G[i][0]) * S * sc, h = (G[i][3] - G[i][2]) * S * sc;
-        out.push(heroGlyph(i, cx - w / 2, cy - h / 2, sc, 1, ink));
+        out.push(heroGlyph(i, cx - w / 2, cy - h / 2, sc, 1, ink, S));
       }
     }
   }
   const curOn = (t >= 2.55 && t < 2.62) || (t >= 2.69 && t < 2.76);
-  const cursor = { x: r2(LX + 702 * S), y: r2(LY + 50 * S), w: r2(44 * S), o: curOn ? 1 : 0 };
-  return { bg: BG[bg], glyphs: out, cursor: cursor };
+  const cursor = { x: r2(LX + 702 * S), y: r2(LY + 50 * S), w: r2(44 * S), h: r2(5 * f), o: curOn ? 1 : 0 };
+  return { bg: BG[bg], glyphs: out, cursor: cursor, h: Q.H };
 }
 // menu fixo: aparece no fim da abertura e marca a seção atual com o losango
 // mesma ordem da página: Work → About me → Contact
@@ -390,7 +558,10 @@ function overlayAt(i, t, vis, galH, gx, maxShift, zone) {
     canL: gx > 6, canR: gx < maxShift - 6, zoneL: zone === 'l' ? 1 : 0, zoneR: zone === 'r' ? 1 : 0
   };
 }
-function workAt(t, filter, hover, setHover, openFn) {
+// posições dos cards: desktop em 3 colunas; celular em uma coluna
+const LAY_D = { x: j => 96 + (j % 3) * 424, y: j => 150 + Math.floor(j / 3) * 340, half: 124, h: n => 150 + (Math.ceil(n / 3) - 1) * 340 + 290 + 80 };
+const LAY_M = { x: () => 20, y: j => 214 + j * 290, half: 106, h: n => 214 + n * 290 + 24 };
+function workAt(t, filter, hover, setHover, openFn, L) {
   const visible = visibleIdx(filter).map(i => ({ p: PROJECTS[i], i: i }));
   const cards = PROJECTS.map((p, i) => {
     const j = visible.findIndex(o => o.i === i), base = { href: p.href, name: p.name, alt: p.name + ' — ' + p.cat, img: p.img, enter: () => setHover(i), leave: () => setHover(-1), open: (e) => { if (e && e.preventDefault) e.preventDefault(); openFn(i); } };
@@ -399,15 +570,14 @@ function workAt(t, filter, hover, setHover, openFn) {
     const typeStart = ti + 0.30, chars = Math.floor(cl((t - typeStart) / 0.035, 0, p.name.length)), typeEnd = typeStart + p.name.length * 0.035;
     const isHover = hover === i && t >= typeEnd;
     return Object.assign(base, {
-      x: 96 + (j % 3) * 424, y: 150 + Math.floor(j / 3) * 340, display: 'block',
-      imgO: t >= ti + 0.12 ? 1 : 0, blockO: t >= ti && t < ti + 0.52 ? 1 : 0, up: r2(-124 * q), down: r2(124 * q),
+      x: L.x(j), y: L.y(j), display: 'block',
+      imgO: t >= ti + 0.12 ? 1 : 0, blockO: t >= ti && t < ti + 0.52 ? 1 : 0, up: r2(-L.half * q), down: r2(L.half * q),
       typed: p.name.slice(0, chars), cur: t >= typeStart && t < typeEnd + 0.18 && Math.floor(t * 12) % 2 === 0 ? 1 : 0,
       metaO: t >= typeEnd ? 1 : 0, meta: '[ ' + p.cat.toUpperCase() + ' ]',
       hoverO: isHover ? 1 : 0, zoom: isHover ? 1.04 : 1
     });
   });
-  // altura da seção: 150 de topo, linhas de 340, card de 290 e respiro de 80 no fim
-  return { cards: cards, h: 150 + (Math.ceil(visible.length / 3) - 1) * 340 + 290 + 80, head1: t >= 0 ? 1 : 0, head2: t >= 0.06 ? 1 : 0 };
+  return { cards: cards, h: L.h(visible.length), head1: t >= 0 ? 1 : 0, head2: t >= 0.06 ? 1 : 0 };
 }
 
 // ---------- 03 CLIENTS — logos oficiais em uma tinta (cinza do isotipo); altura ajustada pelo peso visual de cada um
@@ -424,12 +594,14 @@ const CLIENTS = [
   { alt: 'Wave Garden Residence Club', src: '/_blob/57ae7c8608b528948887095c2bdbfbb0', ratio: 241 / 120, h: 56 },
   { alt: 'Colégio Platão', src: '/_blob/50cf7e6c0fd683bc4b262c4c268a3443', ratio: 108 / 120, h: 56 }
 ];
-const SLOT = 260, SET_W = CLIENTS.length * SLOT, MQ_SPEED = 70;
-function clientsAt(offset) {
-  const m = ((offset % SET_W) + SET_W) % SET_W, out = [];
+const MQ_SPEED = 70;
+// sc = escala dos logos, slot = espaço de cada um, stripH = altura útil da faixa
+const CL_D = { sc: 1, slot: 260, stripH: 94 }, CL_M = { sc: 0.68, slot: 170, stripH: 70 };
+function clientsAt(offset, K) {
+  const setW = CLIENTS.length * K.slot, m = ((offset % setW) + setW) % setW, out = [];
   for (let k = 0; k < CLIENTS.length * 2; k++) {
-    const c = CLIENTS[k % CLIENTS.length], w = c.h * c.ratio;
-    out.push({ src: c.src, alt: k < CLIENTS.length ? c.alt : '', x: r2(k * SLOT - m + (SLOT - w) / 2), top: r2((94 - c.h) / 2), w: r2(w), h: c.h });
+    const c = CLIENTS[k % CLIENTS.length], h = c.h * K.sc, w = h * c.ratio;
+    out.push({ src: c.src, alt: k < CLIENTS.length ? c.alt : '', x: r2(k * K.slot - m + (K.slot - w) / 2), top: r2((K.stripH - h) / 2), w: r2(w), h: r2(h) });
   }
   return out;
 }
@@ -507,6 +679,39 @@ function aboutAt(p, ta, te, ctaHover, flash) {
   };
 }
 
+// ---------- 04 ABOUT ME no celular — a linha desce na vertical
+// f = frente da linha (em px, a partir do topo da trilha): o ponto da trilha que está a 62% da altura da tela.
+// MS = altura de cada ano na trilha; M_END = fim da linha, onde fica a seta para o "Let's talk".
+const MS = [40, 360, 680, 1000], M_END = 1260;
+function aboutAtM(f, ta, tp, te, flash) {
+  const front = cl(f, 0, M_END);
+  let active = -1;
+  MS.forEach((y, i) => { if (y <= front) active = i; });
+  const stops = MS.map((y, i) => {
+    const st = i === active ? 'now' : i < active ? 'past' : 'next';
+    return {
+      y: y, year: INFO[i].y, period: INFO[i].period, company: INFO[i].company, text: INFO[i].text, tags: INFO[i].tags,
+      color: st === 'now' ? '#fe0000' : st === 'past' ? '#000000' : '#4f4f4f',
+      ring: st === 'now' ? '#fe0000' : '#000000', fill: st === 'now' ? '#fe0000' : st === 'past' ? '#000000' : '#f9f5f5'
+    };
+  });
+  let fl = { y: 0, h: 0, o: 0 };
+  if (flash && flash.i >= 0 && flash.t < 1.1) {
+    const y0 = flash.i === 0 ? 0 : MS[flash.i - 1];
+    fl = { y: y0, h: MS[flash.i] - y0, o: r2(0.9 * Math.min(1, flash.t / 0.08) * (1 - cubicOut(seg(flash.t, 0.08, 1.1)))) };
+  }
+  const reached = te >= 0, ctaOn = reached && te >= 0.24;
+  return {
+    h1o: ta >= 0.10 ? 1 : 0, h2o: ta >= 0.20 ? 1 : 0, bioO: ta >= 0.32 ? 1 : 0, eduO: ta >= 0.42 ? 1 : 0,
+    photoClip: tp < 0.05 ? 100 : tp < 0.15 ? 62 : tp < 0.25 ? 30 : 0,
+    focusO: tp < 0.30 || (tp > 0.46 && tp < 0.52) ? 0 : 1, focusS: r2(1 + 0.06 * (1 - expo(seg(tp, 0.30, 0.62)))),
+    progH: r2(front), lineBg: 'linear-gradient(180deg, #000 ' + r2(Math.max(0, front - 160)) + 'px, #fe0000 ' + r2(Math.max(1, front)) + 'px)',
+    flY: fl.y, flH: fl.h, flO: fl.o, stops: stops,
+    headO: reached ? 1 : 0, headS: r2(reached ? backOut(seg(te, 0, 0.22)) : 0),
+    ctaO: ctaOn ? 1 : 0, ctaColor: reached ? '#000000' : '#d0d0d0'
+  };
+}
+
 // ---------- 05 FOOTER — sticker
 // Entrada: a mesma da prancha M5. O adesivo inteiro cai girando, é pressionado e assenta com o canto do rosto solto.
 // Depois que assenta (ST_IN), dá para segurar o rosto e puxar: ele dobra e resiste, mas não descola, e volta com uma mola ao soltar.
@@ -559,10 +764,17 @@ function localTime() {
   catch (e) { return '00:00:00'; }
 }
 
+// abaixo de 760 px de largura entra o layout de celular (desenhado em 390 de largura).
+// A largura vem da área útil da página (clientWidth): no celular, window.innerWidth cresce quando o navegador
+// afasta o zoom para caber uma página larga, e o layout nunca trocaria. Decidido já no primeiro desenho.
+function viewportState() {
+  const w = (document.documentElement && document.documentElement.clientWidth) || window.innerWidth, mob = w < 760;
+  return { mob: mob, zoom: Math.max(0.2, w / (mob ? 390 : 1440)) };
+}
 class Component extends DCLogic {
   constructor(props) {
     super(props);
-    this.state = { now: 0, zoom: 1, filter: 'Selected', hover: -1, cta: false, open: -1, zone: '', grab: false };
+    this.state = Object.assign({ now: 0, filter: 'Selected', hover: -1, cta: false, open: -1, zone: '', grab: false }, viewportState());
     // esteira de clientes: off = deslocamento atual; vel = embalo extra que se dissipa; drag = gesto em andamento
     this.mq = { off: 0, vel: 0, drag: null };
     this.onMqDown = (e) => {
@@ -623,6 +835,7 @@ class Component extends DCLogic {
       const now = performance.now();
       if (this.state.open < 0) this.tOpen = now;
       this.t0ov = now; this.tClose = null; this.gx = 0; this.gT = 0;
+      if (this.ovmEl) this.ovmEl.scrollTop = 0;
       this.setState({ open: i, hover: -1, zone: '' });
     };
     this.closeProject = () => { if (this.state.open >= 0 && this.tClose === null) this.tClose = performance.now(); };
@@ -638,9 +851,13 @@ class Component extends DCLogic {
       else if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === 'PageDown') { e.preventDefault(); this.push(480); }
       else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp' || e.key === 'PageUp') { e.preventDefault(); this.push(-480); }
     };
-    this.t0 = { hero: null, about: null, work: null, foot: null };
+    this.t0 = { hero: null, about: null, work: null, foot: null, mphoto: null };
     this.active = ''; this.p = 0; this.tEnd = null;
     this.aboutRef = (el) => { this.aboutEl = el; };
+    // celular: trilha vertical do About, foto do About e área que rola dentro do projeto aberto
+    this.mlineRef = (el) => { this.mlineEl = el; };
+    this.mphotoRef = (el) => { this.mphotoEl = el; };
+    this.ovmRef = (el) => { this.ovmEl = el; };
     this.workRef = (el) => { this.workEl = el; };
     this.onStDown = (e) => {
       if (e.pointerType === 'mouse' && e.button !== 0) return;
@@ -792,7 +1009,24 @@ class Component extends DCLogic {
       if (this.t0.work === null && r.top < vh * 0.7) this.t0.work = ts;
       if (r.top <= vh * 0.4) active = 'work';
     }
-    if (this.aboutEl) {
+    if (this.state.mob) {
+      if (this.aboutEl) {
+        const r = this.aboutEl.getBoundingClientRect();
+        if (this.t0.about === null && r.top < vh * 0.75) this.t0.about = ts;
+        if (r.top <= vh * 0.4) active = 'about';
+      }
+      if (this.mphotoEl && this.t0.mphoto === null && this.mphotoEl.getBoundingClientRect().top < vh * 0.85) this.t0.mphoto = ts;
+      if (this.mlineEl) {
+        const r = this.mlineEl.getBoundingClientRect();
+        this.mf = (vh * 0.62 - r.top) / this.state.zoom;
+        let ai = -1;
+        MS.forEach((y, i) => { if (y <= this.mf) ai = i; });
+        if (this.lastStopM === undefined) this.lastStopM = ai;
+        if (ai !== this.lastStopM) { if (ai >= 0) this.flashM = { i: ai, t0: ts }; this.lastStopM = ai; }
+        if (this.mf >= M_END && this.tEndM == null) this.tEndM = ts;
+        if (this.mf < M_END - 80) this.tEndM = null;
+      }
+    } else if (this.aboutEl) {
       const r = this.aboutEl.getBoundingClientRect(), z = this.state.zoom;
       // a faixa anda durante A_SHIFT px de rolagem; os 360 px seguintes são a pausa com o "Let's talk" aceso
       this.p = cl(-r.top / (A_SHIFT * z));
@@ -814,7 +1048,7 @@ class Component extends DCLogic {
     this.active = active;
   }
   componentDidMount() {
-    this.onResize = () => this.setState({ zoom: Math.max(0.2, window.innerWidth / 1440) });
+    this.onResize = () => this.setState(viewportState());
     window.addEventListener('resize', this.onResize); this.onResize();
     window.addEventListener('keydown', this.onKey);
     const measureYear = () => { try { const g = document.createElement('canvas').getContext('2d'); g.font = '150px Anton'; const w = g.measureText('20').width; if (w > 0) YW.w = w; } catch (e) {} };
@@ -857,29 +1091,61 @@ class Component extends DCLogic {
       goL: this.goL, goR: this.goR, enterL: this.enterL, enterR: this.enterR, leaveZ: this.leaveZ
     });
   }
+  // projeto aberto no celular: texto no topo e as imagens empilhadas na largura da tela
+  overlayM(now) {
+    const st = this.state;
+    if (st.open < 0) return { on: false, imgs: [] };
+    const H = window.innerHeight / st.zoom, p = PROJECTS[st.open], key = KEYS[st.open], vis = this.visible(), j = vis.indexOf(st.open);
+    const pad = v => (v < 10 ? '0' : '') + v, t = (now - this.t0ov) / 1000, to = (now - this.tOpen) / 1000;
+    const tc = this.tClose === null ? 0 : seg((now - this.tClose) / 1000, 0, 0.26);
+    const imgs = GALLERY[key].map((g, k) => {
+      const d = Math.min(k, 6) * 0.06, q = expo(seg(t, 0.12 + d, 0.6 + d));
+      return { src: '/_blob/' + g[0], alt: p.name + ' — ' + (k + 1), h: r2(350 * g[2] / g[1]), o: r2(cl(q * 1.4)), dy: r2(30 * (1 - q)) };
+    });
+    return {
+      on: true, name: p.name, cat: p.cat.toUpperCase(), href: p.href, desc: DESC[key] || '', imgs: imgs,
+      num: pad(j + 1), total: pad(vis.length), h: r2(H), bodyH: r2(H - 56),
+      o: r2(cubicOut(seg(to, 0, 0.32)) * (1 - tc)), dy: r2(30 * (1 - expo(seg(to, 0, 0.5))) + 20 * tc),
+      close: this.closeProject, prev: () => this.step(-1), next: () => this.step(1)
+    };
+  }
   renderVals() {
     const now = this.state.now, st = this.state;
     const th = this.since('hero', now), ta = this.since('about', now), tw = this.since('work', now);
     const ht = th < 0 ? 0 : Math.min(th, HT);
     if (ht >= HT) this.navDone = true;
-    return {
-      zoom: st.zoom,
-      hero: heroAt(ht),
+    const mob = st.mob;
+    const common = {
+      zoom: st.zoom, rootW: mob ? 390 : 1440, desk: !mob, mob: mob,
       nav: NAV.map((l, j) => ({ label: l[0], href: l[1], o: ht >= NAV_T[j] || this.navDone ? 1 : 0, dy: ht >= NAV_T[j] + 0.08 || this.navDone ? 0 : 6, on: this.active === l[2] ? 1 : 0 })),
       navBg: this.active ? 'rgba(249, 245, 245, 0.94)' : 'transparent',
-      work: workAt(tw, st.filter, st.hover, this.setHover, this.openProject),
-      ov: this.overlay(now),
-      ovRef: this.ovRef,
       // clicar no filtro ativo de novo volta para os 3 destaques
       chips: FILTERS.map(name => ({ label: name.toUpperCase(), bg: st.filter === name ? '#000' : 'transparent', fg: st.filter === name ? '#f9f5f5' : '#000', pick: () => { this.t0.work = performance.now(); this.setState({ filter: st.filter === name ? 'Selected' : name, hover: -1 }); } })),
-      logos: clientsAt(this.mq.off), mqRef: this.mqRef, mqCursor: st.grab ? 'grabbing' : 'grab',
-      about: aboutAt(this.p, ta, this.tEnd === null ? -1 : (now - this.tEnd) / 1000, st.cta, this.flash ? { i: this.flash.i, t: (now - this.flash.t0) / 1000 } : null),
+      logos: clientsAt(this.mq.off, mob ? CL_M : CL_D), mqRef: this.mqRef, mqCursor: st.grab ? 'grabbing' : 'grab',
       ctaEnter: this.ctaEnter, ctaLeave: this.ctaLeave, backTop: this.backTop,
-      // painel preso do About: altura da janela (entre 520 e 810); abaixo de 810 o conteúdo encolhe por inteiro para nada cortar
-      abox: (() => { const H = cl(window.innerHeight / st.zoom, 520, 810), k = H / 810; return { panelH: r2(H), s: Math.round(k * 10000) / 10000, w: r2(1440 / k), secH: r2(A_SHIFT + 360 + H) }; })(),
       localTime: localTime(),
       aboutRef: this.aboutRef, workRef: this.workRef, footRef: this.footRef, cvRef: this.cvRef
     };
+    if (mob) {
+      const MH = cl(window.innerHeight / st.zoom, 560, 900);
+      return Object.assign(common, {
+        hero: heroAt(ht, { W: 390, H: MH, S: 0.47, M: 20 }),
+        work: workAt(tw, st.filter, st.hover, this.setHover, this.openProject, LAY_M),
+        ma: aboutAtM(this.mf || 0, ta, this.since('mphoto', now), this.tEndM == null ? -1 : (now - this.tEndM) / 1000, this.flashM ? { i: this.flashM.i, t: (now - this.flashM.t0) / 1000 } : null),
+        ovm: this.overlayM(now), ov: { on: false, tiles: [] },
+        mlineRef: this.mlineRef, mphotoRef: this.mphotoRef, ovmRef: this.ovmRef
+      });
+    }
+    return Object.assign(common, {
+      hero: heroAt(ht, GEO_D),
+      work: workAt(tw, st.filter, st.hover, this.setHover, this.openProject, LAY_D),
+      ov: this.overlay(now),
+      ovRef: this.ovRef,
+      about: aboutAt(this.p, ta, this.tEnd === null ? -1 : (now - this.tEnd) / 1000, st.cta, this.flash ? { i: this.flash.i, t: (now - this.flash.t0) / 1000 } : null),
+      // painel preso do About: altura da janela (entre 520 e 810); abaixo de 810 o conteúdo encolhe por inteiro para nada cortar
+      abox: (() => { const H = cl(window.innerHeight / st.zoom, 520, 810), k = H / 810; return { panelH: r2(H), s: Math.round(k * 10000) / 10000, w: r2(1440 / k), secH: r2(A_SHIFT + 360 + H) }; })(),
+      ovm: { on: false, imgs: [] }
+    });
   }
 }
 </script>
