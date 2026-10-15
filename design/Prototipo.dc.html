@@ -32,22 +32,10 @@ html{scroll-behavior:smooth}
     </ul>
   </nav>
 
-  <!-- 01 HOME -->
-  <header id="topo" style="position: relative; height: 810px; overflow: hidden; background: {{ hero.bg }}">
-    <img src="/_blob/f58df74353a40529183de8d338f66b68" alt="" style="position: absolute; left: 0; top: 0; width: 2px; height: 2px; opacity: 0">
-    <img src="/_blob/969a84877293762082cde8c364b566b9" alt="" style="position: absolute; left: 0; top: 0; width: 2px; height: 2px; opacity: 0">
-    <img src="/_blob/b5eb09e0ad93304d2f7d639b307b1cec" alt="" style="position: absolute; left: 0; top: 0; width: 2px; height: 2px; opacity: 0">
-    <img src="/_blob/d19932d0d00c72ad71a1e3c025d3c66f" alt="" style="position: absolute; left: 0; top: 0; width: 2px; height: 2px; opacity: 0">
-    <img src="/_blob/290c2b75dc1a9808de46f4d1a716bb28" alt="" style="position: absolute; left: 0; top: 0; width: 2px; height: 2px; opacity: 0">
-    <img src="/_blob/b4f44df9f0d56bd478f540796d734b72" alt="" style="position: absolute; left: 0; top: 0; width: 2px; height: 2px; opacity: 0">
-    <h1 aria-label="Design by Nero" style="margin: 0">
-      <sc-for list="{{ hero.glyphs }}" as="g" hint-placeholder-count="13">
-        <div style="position: absolute; left: {{ g.x }}px; top: {{ g.y }}px; width: {{ g.w }}px; height: {{ g.h }}px; overflow: hidden; opacity: {{ g.o }}; clip-path: {{ g.clip }}">
-          <img src="{{ g.src }}" alt="" style="position: absolute; left: {{ g.ix }}px; top: {{ g.iy }}px; width: {{ g.iw }}px; height: {{ g.ih }}px; max-width: none">
-        </div>
-      </sc-for>
-    </h1>
-    <div style="position: absolute; left: {{ hero.cursor.x }}px; top: {{ hero.cursor.y }}px; width: {{ hero.cursor.w }}px; height: 5px; background: #fe0000; opacity: {{ hero.cursor.o }}"></div>
+  <!-- 01 HOME: abertura M8 desenhada num canvas (o ponto gira, multiplica e estica até o logo) -->
+  <header id="topo" style="position: relative; height: 810px; overflow: hidden; background: #f9f5f5">
+    <h1 style="margin: 0"><span style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap">Design by Nero</span></h1>
+    <canvas ref="{{ heroCvRef }}" width="1440" height="810" aria-hidden="true" style="position: absolute; left: 0; top: 0; width: 1440px; height: 810px; pointer-events: none"></canvas>
   </header>
 
   <!-- 02 WORK -->
@@ -233,22 +221,10 @@ html{scroll-behavior:smooth}
     </ul>
   </nav>
 
-  <!-- 01 HOME: a mesma abertura, com o logo em escala de celular e altura da tela -->
-  <header id="topo" style="position: relative; height: {{ hero.h }}px; overflow: hidden; background: {{ hero.bg }}">
-    <img src="/_blob/f58df74353a40529183de8d338f66b68" alt="" style="position: absolute; left: 0; top: 0; width: 2px; height: 2px; opacity: 0">
-    <img src="/_blob/969a84877293762082cde8c364b566b9" alt="" style="position: absolute; left: 0; top: 0; width: 2px; height: 2px; opacity: 0">
-    <img src="/_blob/b5eb09e0ad93304d2f7d639b307b1cec" alt="" style="position: absolute; left: 0; top: 0; width: 2px; height: 2px; opacity: 0">
-    <img src="/_blob/d19932d0d00c72ad71a1e3c025d3c66f" alt="" style="position: absolute; left: 0; top: 0; width: 2px; height: 2px; opacity: 0">
-    <img src="/_blob/290c2b75dc1a9808de46f4d1a716bb28" alt="" style="position: absolute; left: 0; top: 0; width: 2px; height: 2px; opacity: 0">
-    <img src="/_blob/b4f44df9f0d56bd478f540796d734b72" alt="" style="position: absolute; left: 0; top: 0; width: 2px; height: 2px; opacity: 0">
-    <h1 aria-label="Design by Nero" style="margin: 0">
-      <sc-for list="{{ hero.glyphs }}" as="g" hint-placeholder-count="13">
-        <div style="position: absolute; left: {{ g.x }}px; top: {{ g.y }}px; width: {{ g.w }}px; height: {{ g.h }}px; overflow: hidden; opacity: {{ g.o }}; clip-path: {{ g.clip }}">
-          <img src="{{ g.src }}" alt="" style="position: absolute; left: {{ g.ix }}px; top: {{ g.iy }}px; width: {{ g.iw }}px; height: {{ g.ih }}px; max-width: none">
-        </div>
-      </sc-for>
-    </h1>
-    <div style="position: absolute; left: {{ hero.cursor.x }}px; top: {{ hero.cursor.y }}px; width: {{ hero.cursor.w }}px; height: {{ hero.cursor.h }}px; background: #fe0000; opacity: {{ hero.cursor.o }}"></div>
+  <!-- 01 HOME: a mesma abertura M8, com o logo em escala de celular e altura da tela -->
+  <header id="topo" style="position: relative; height: {{ hero.h }}px; overflow: hidden; background: #f9f5f5">
+    <h1 style="margin: 0"><span style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap">Design by Nero</span></h1>
+    <canvas ref="{{ heroCvRef }}" width="390" height="844" aria-hidden="true" style="position: absolute; left: 0; top: 0; width: 390px; height: {{ hero.h }}px; pointer-events: none"></canvas>
   </header>
 
   <!-- 02 WORK: uma coluna; nome e categoria na mesma linha, embaixo da capa -->
@@ -389,76 +365,122 @@ const backOut = x => { const c1 = 1.70158, c3 = c1 + 1; return 1 + c3 * Math.pow
 const lerp = (a, b, k) => a + (b - a) * k;
 const r2 = v => Math.round(v * 100) / 100;
 
-// ---------- 01 HOME — a mesma abertura da prancha M1
-// geometria da abertura: W × H da tela de desenho, S = escala do logo (746 × 487 no PNG), M = margem dos cantos
-const HT = 2.9;
-const GEO_D = { W: 1440, H: 810, S: 0.72, M: 48 };
-const SRC = { red: '/_blob/f58df74353a40529183de8d338f66b68', black: '/_blob/969a84877293762082cde8c364b566b9', paper: '/_blob/b5eb09e0ad93304d2f7d639b307b1cec' };
-const SRC_R = { red: '/_blob/d19932d0d00c72ad71a1e3c025d3c66f', black: '/_blob/290c2b75dc1a9808de46f4d1a716bb28', paper: '/_blob/b4f44df9f0d56bd478f540796d734b72' };
-const BG = { paper: '#f9f5f5', red: '#fe0000', black: '#000000' };
-const INK = { paper: 'red', red: 'black', black: 'paper' };
+// ---------- 01 HOME — abertura M8 (escolhida para o site no lugar da M1)
+// Um ponto vermelho aparece e gira cada vez mais rápido, com rastro; o rastro solta mais 12 pontos (um por letra) e o anel
+// de 13 gira; os pontos saem em espiral até as letras e cada um estica (vira um traço, abre na largura da letra, mola);
+// o primeiro vira o ®. Uma onda passa pelas linhas (uma estica enquanto a outra encolhe) e tudo assenta no logo.
+// Os tempos abaixo são os da prancha M8; no site ela roda a 0,5× (HERO_SPEED), ou seja, assenta em 7,2 s.
+const HERO_SPEED = 0.5, HT = 3.6;
+const GEO_D = { W: 1440, H: 810, S: 0.72 };
+const HERO_LOGO = '/_blob/f58df74353a40529183de8d338f66b68';
+const REDUCED = (() => { try { return window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) { return false; } })();
+const TAU = Math.PI * 2, N_DOT = 13;
+const smooth01 = x => x <= 0 ? 0 : x >= 1 ? 1 : x * x * (3 - 2 * x);
+// caixas das letras no PNG (746 × 487): [x0, x1, y0, y1, linha]; D E S I G N ® / B Y N E R O
 const G = [[0,120,0,240,0],[131,232,0,240,0],[241,361,0,240,0],[370,415,0,240,0],[426,544,0,240,0],[557,686,0,240,0],[702,746,0,56,0],
            [0,118,247,487,1],[105,240,247,487,1],[247,376,247,487,1],[389,490,247,487,1],[500,617,247,487,1],[628,746,247,487,1]];
-// o braço do Y entra na área do B: as duas caixas se sobrepõem e cada letra é recortada pela diagonal entre elas
-const CLIP = { 7: 'polygon(0% 0%, 88.98% 0%, 95.76% 20.42%, 100% 23.75%, 100% 100%, 0% 100%)', 8: 'polygon(0% 0%, 100% 0%, 100% 100%, 9.63% 100%, 9.63% 23.75%, 5.93% 20.42%)' };
-const CORNER = [0, 7, 9, 6];
-const CSC = i => i === 6 ? 2.44 : 0.5;
-const bgAt = t => t < 0.55 ? 'paper' : t < 0.82 ? 'red' : t < 1.38 ? 'black' : t < 2.02 ? 'red' : 'paper';
-function heroGlyph(i, x, y, sc, o, ink, S) {
-  const g = G[i], w = (g[1] - g[0]) * S * sc, h = (g[3] - g[2]) * S * sc;
-  if (i === 6) return { x: r2(x), y: r2(y), w: r2(w), h: r2(h), ix: 0, iy: 0, iw: r2(w), ih: r2(h), o: o, src: SRC_R[ink], clip: 'none' };
-  return { x: r2(x), y: r2(y), w: r2(w), h: r2(h), ix: r2(-g[0] * S * sc), iy: r2(-g[2] * S * sc), iw: r2(746 * S * sc), ih: r2(487 * S * sc), o: o, src: SRC[ink], clip: CLIP[i] || 'none' };
+// o braço do Y entra na caixa do B: cada uma é recortada pela diagonal entre as duas (em % da caixa)
+const CLIP_P = { 7: [[0, 0], [88.98, 0], [95.76, 20.42], [100, 23.75], [100, 100], [0, 100]], 8: [[0, 0], [100, 0], [100, 100], [9.63, 100], [9.63, 23.75], [5.93, 20.42]] };
+// tempos da M8 (s)
+const H_POP = 0.2, H_SPIN = 0.3, SPIN_D = 0.8, W_SPIN = 14;
+const T_SPAWN = 0.62, SPAWN_GAP = 0.045, SPAWN_D = 0.32;
+const TD = 1.5, TD_GAP = 0.022, DUR = 0.6, PHI = W_SPIN * DUR / 3;
+const WAVE_A = 2.35, WAVE_B = 3.6, WAVE_P = 0.66, WAVE_AMP = 0.3;
+// giro acumulado (integral da velocidade, que sobe suave de 0 a W_SPIN)
+function spinBase(t) {
+  if (t <= H_SPIN) return 0;
+  const x = (t - H_SPIN) / SPIN_D;
+  if (x < 1) return W_SPIN * SPIN_D * (x * x * x - x * x * x * x / 2);
+  return W_SPIN * (SPIN_D * 0.5 + (t - H_SPIN - SPIN_D));
 }
-function cornerBox(ci, Q) {
-  const S = Q.S, i = CORNER[ci], g = G[i], w = (g[1] - g[0]) * S * CSC(i), h = (g[3] - g[2]) * S * CSC(i);
-  const dy = i === 6 ? h * 5 / 56 : 0;
-  const pos = [[Q.M, Q.M], [Q.W - Q.M - w, Q.M], [Q.M, Q.H - Q.M - h + dy], [Q.W - Q.M - w, Q.H - Q.M - h + dy]][ci];
-  return { x: pos[0], y: pos[1], w: w, h: h };
+const elastic = u => u <= 0 ? 0 : 1 - Math.exp(-3.2 * u) * Math.cos(7.5 * u);
+// geometria para uma tela W × H com o logo na escala S; f = S / 0,72 ajusta ponto, anel e onda (celular usa 0,47)
+function heroGeo(Q) {
+  const S = Q.S, f = S / 0.72, X0 = (Q.W - 746 * S) / 2, Y0 = (Q.H - 487 * S) / 2, CX = Q.W / 2, CY = Q.H / 2;
+  const GL = G.map((g, i) => {
+    const x0 = X0 + g[0] * S, x1 = X0 + g[1] * S, y0 = Y0 + g[2] * S, y1 = Y0 + g[3] * S;
+    return { i: i, g: g, x0: x0, y0: y0, w: x1 - x0, h: y1 - y0, cx: (x0 + x1) / 2, cy: (y0 + y1) / 2, row: g[4] };
+  });
+  const TH = GL.map(q => Math.atan2(q.cy - CY, q.cx - CX)), RT = GL.map(q => Math.hypot(q.cx - CX, q.cy - CY));
+  // ponto j → letra ORDER[j]: o primeiro vira o ®; os que nascem atrás dele pegam as letras na ordem em volta do centro
+  const ORDER = [6].concat([0, 1, 2, 3, 4, 5, 7, 8, 9, 10, 11, 12]
+    .map(i => ({ i: i, rel: (((TH[6] - TH[i]) % TAU) + TAU) % TAU })).sort((a, b) => a.rel - b.rel).map(o => o.i));
+  return { Q: Q, S: S, f: f, CX: CX, CY: CY, GL: GL, TH: TH, RT: RT, ORDER: ORDER, PHI0: TH[6] - PHI - spinBase(TD), dot: 18 * f, waveL: 130 * f };
 }
-function heroAt(t, Q) {
-  // f: os deslocamentos da animação acompanham o tamanho do logo
-  const S = Q.S, f = S / 0.72, LX = (Q.W - 746 * S) / 2, LY = (Q.H - 487 * S) / 2;
-  const bg = bgAt(t), ink = INK[bg], out = [];
-  for (let i = 0; i < 13; i++) {
-    const g = G[i], hx = LX + g[0] * S, hy = LY + g[2] * S, w = (g[1] - g[0]) * S, h = (g[3] - g[2]) * S;
-    const dir = g[4] === 0 ? -1 : 1;
-    let x = hx, y = hy, sc = 1, o = 1;
-    if (t >= 0.30 && t < 0.82) {
-      const k = t < 0.55 ? 120 * expo(seg(t, 0.30, 0.55)) : 120 + 80 * cubicOut(seg(t, 0.55, 0.82));
-      x = hx + dir * k * 0.5 * f; y = hy + dir * k * 0.8 * f;
-    } else if (t >= 0.82 && t < 2.02) {
-      const ci = CORNER.indexOf(i);
-      if (ci < 0 || t >= 1.38) { o = 0; }
-      else { const c = cornerBox(ci, Q), q = expo(seg(t, 0.82, 1.04)); x = lerp(hx + dir * 100 * f, c.x, q); y = lerp(hy + dir * 160 * f, c.y, q); sc = lerp(1, CSC(i), q); }
-    } else if (t >= 2.02) {
-      const d = i < 6 ? i : i - 1, q = seg(t, 2.02 + d * 0.018, 2.44 + d * 0.018), e = backOut(q);
-      sc = Math.max(0.04, lerp(0.04, 1, e)); x = lerp(Q.W / 2 - w * 0.02, hx, e); y = lerp(Q.H / 2 - h * 0.02, hy, e);
-      if (q <= 0) o = 0;
-    }
-    if (i === 6 && t >= 2.02) { if (t < 2.76) o = 0; else { x = hx; y = hy; sc = 1; o = 1; } }
-    out.push(heroGlyph(i, x, y, sc, o, ink, S));
+const ringR = (Z, t) => Z.f * (34 * cubicOut(seg(t, H_SPIN, 0.62)) + 30 * inOut(seg(t, 0.7, 1.4)));
+const spawnAt = j => T_SPAWN + SPAWN_GAP * (j - 1);
+function ringAngle(Z, j, t) {
+  const a = Z.PHI0 + spinBase(t);
+  return j === 0 ? a : a - (TAU * j / N_DOT) * cubicOut(seg(t, spawnAt(j), spawnAt(j) + SPAWN_D));
+}
+// posição do ponto j (null = ainda não existe); na saída continua girando e desacelera até o centro da letra
+function dotPos(Z, j, t) {
+  if (t < H_POP || (j > 0 && t < spawnAt(j))) return null;
+  const td = TD + TD_GAP * j;
+  if (t <= td) { const a = ringAngle(Z, j, t), r = ringR(Z, t); return { x: Z.CX + r * Math.cos(a), y: Z.CY + r * Math.sin(a) }; }
+  const g = Z.ORDER[j], u = seg(t, td, td + DUR), a0 = ringAngle(Z, j, td);
+  let tt = Z.TH[g];
+  while (tt < a0 + PHI - Math.PI) tt += TAU;
+  while (tt > a0 + PHI + Math.PI) tt -= TAU;
+  const a = a0 + PHI * cubicOut(u) + (tt - a0 - PHI) * inOut(u), r = lerp(ringR(Z, td), Z.RT[g], inOut(u));
+  return { x: Z.CX + r * Math.cos(a), y: Z.CY + r * Math.sin(a) };
+}
+// caixa da letra j: o ponto estica na vertical, abre na largura da letra; a sobra da mola vai para fora e a onda move a junta
+function glyphBox(Z, j, t) {
+  const q = Z.GL[Z.ORDER[j]], u = t - (TD + TD_GAP * j + DUR), D = Z.dot;
+  if (u < 0) return null;
+  const w = lerp(D, q.w, backOut(seg(u, 0.12, 0.42))), hb = lerp(D, q.h, elastic(u)), over = Math.max(0, hb - q.h), core = Math.min(hb, q.h);
+  let top, bot;
+  if (q.row === 0) { top = q.cy - core / 2 - over; bot = top + hb; } else { bot = q.cy + core / 2 + over; top = bot - hb; }
+  if (q.i !== 6) {
+    const f = WAVE_AMP * Math.sin(TAU * (t - WAVE_A) / WAVE_P - (q.cx - Z.CX) / Z.waveL) * Math.pow(Math.sin(Math.PI * seg(t, WAVE_A, WAVE_B)), 2) * q.h;
+    if (q.row === 0) bot += f; else top += f;
   }
-  if (t >= 1.38 && t < 2.02) {
-    const n = 8, head = (n - 1) * cubicOut(seg(t, 1.38, 1.66)), tail = (n - 1) * seg(t, 1.70, 2.00);
-    for (let ci = 0; ci < 4; ci++) {
-      const c = cornerBox(ci, Q), i = CORNER[ci], ccx = c.x + c.w / 2, ccy = c.y + c.h / 2;
-      for (let k = 0; k < n; k++) {
-        if (k > head + 1e-6 || k < tail - 1e-6) continue;
-        const fk = Math.pow(0.06, k / (n - 1)), sc = CSC(i) * fk;
-        const cx = Q.W / 2 + (ccx - Q.W / 2) * fk, cy = Q.H / 2 + (ccy - Q.H / 2) * fk;
-        const w = (G[i][1] - G[i][0]) * S * sc, h = (G[i][3] - G[i][2]) * S * sc;
-        out.push(heroGlyph(i, cx - w / 2, cy - h / 2, sc, 1, ink, S));
+  return { x: q.cx - w / 2, y: top, w: w, h: bot - top, m: smooth01(seg(u, 0.16, 0.36)) };
+}
+function roundRect(x, X, Y, W, H, R) {
+  R = Math.max(0, Math.min(R, W / 2, H / 2));
+  x.beginPath(); x.moveTo(X + R, Y); x.arcTo(X + W, Y, X + W, Y + H, R); x.arcTo(X + W, Y + H, X, Y + H, R); x.arcTo(X, Y + H, X, Y, R); x.arcTo(X, Y, X + W, Y, R); x.closePath();
+}
+// desenha o quadro t da abertura; pr = pixels do canvas por px de layout
+function heroPaint(x, img, Z, t, pr) {
+  x.setTransform(1, 0, 0, 1, 0, 0); x.clearRect(0, 0, x.canvas.width, x.canvas.height);
+  x.setTransform(pr, 0, 0, pr, 0, 0);
+  x.fillStyle = '#fe0000';
+  for (let j = 0; j < N_DOT; j++) {
+    const b = glyphBox(Z, j, t);
+    // ponto com rastro: desenhado em 8 instantes dentro de 1/60 s
+    if (!b) {
+      const M = 8, pop = j === 0 ? backOut(seg(t, H_POP, H_POP + 0.22)) : 1;
+      for (let k = 0; k < M; k++) {
+        const p = dotPos(Z, j, t - (1 / 60) * k / M);
+        if (!p) continue;
+        x.globalAlpha = 0.36; x.beginPath(); x.arc(p.x, p.y, Z.dot / 2 * pop, 0, TAU); x.fill();
       }
+      continue;
     }
+    // a letra esticada na caixa e recortada pela cápsula, cujos cantos endurecem; a cápsula some por cima, abrindo os miolos
+    const rad = Math.min(b.w, b.h) / 2 * (1 - b.m);
+    if (b.m > 0 && img) {
+      const q = Z.GL[Z.ORDER[j]], g = q.g;
+      x.save(); x.globalAlpha = 1;
+      roundRect(x, b.x, b.y, b.w, b.h, rad); x.clip();
+      x.translate(b.x, b.y); x.scale(b.w / q.w, b.h / q.h);
+      x.beginPath();
+      if (CLIP_P[q.i]) CLIP_P[q.i].forEach((pt, n) => { const px = pt[0] / 100 * q.w, py = pt[1] / 100 * q.h; if (n) x.lineTo(px, py); else x.moveTo(px, py); });
+      else x.rect(0, 0, q.w, q.h);
+      x.closePath(); x.clip();
+      x.drawImage(img, -g[0] * Z.S, -g[2] * Z.S, 746 * Z.S, 487 * Z.S);
+      x.restore();
+    }
+    if (b.m < 1) { x.globalAlpha = 1 - b.m; roundRect(x, b.x, b.y, b.w, b.h, rad); x.fill(); }
   }
-  const curOn = (t >= 2.55 && t < 2.62) || (t >= 2.69 && t < 2.76);
-  const cursor = { x: r2(LX + 702 * S), y: r2(LY + 50 * S), w: r2(44 * S), h: r2(5 * f), o: curOn ? 1 : 0 };
-  return { bg: BG[bg], glyphs: out, cursor: cursor, h: Q.H };
+  x.globalAlpha = 1;
 }
 // menu fixo: aparece no fim da abertura e marca a seção atual com o losango
 // mesma ordem da página: Work → About me → Contact
 const NAV = [['Work', '#trabalhos', 'work'], ['About me', '#sobre', 'about'], ['Contact', '#contato', 'foot']];
-const NAV_T = [2.62, 2.68, 2.74];
+const NAV_T = [2.9, 2.96, 3.02];
 
 // ---------- 02 WORK — projetos do Behance; capas escolhidas por ele (originais do Behance; Spraytec é o arquivo enviado)
 const B = 'https://www.behance.net/gallery/';
@@ -890,6 +912,11 @@ class Component extends DCLogic {
       if (el) ev.forEach(p => el.addEventListener(p[0], p[1]));
     };
     this.cvRef = (el) => { this.cv = el; this.paintSticker(); };
+    // abertura: canvas do topo e o PNG do logo (as letras são recortadas dele)
+    this.heroCvRef = (el) => { this.heroCv = el; this.heroDrawn = null; this.paintHero(this.state.now); };
+    this.heroImg = new Image();
+    this.heroImg.onload = () => { this.heroReady = true; this.heroDrawn = null; };
+    this.heroImg.src = HERO_LOGO;
     this.setHover = (i) => { if (this.state.hover !== i) this.setState({ hover: i }); };
     // pedido de replay da abertura; vale por 5 s, para não disparar mais tarde se a pessoa desistir no meio do caminho
     this.backTop = () => { this.replayAt = performance.now(); };
@@ -919,6 +946,25 @@ class Component extends DCLogic {
       }
     } catch (e) { this.K = { x: 225, y: 240 }; this.dmax = 225 * N0.x + 240 * N0.y; this.dmin = 0; }
     if (!this.K) { this.K = { x: 225, y: 240 }; this.dmax = 225 * N0.x + 240 * N0.y; this.dmin = 0; }
+  }
+  // tela da abertura: no celular, a altura da janela (entre 560 e 900)
+  heroQ() { return this.state.mob ? { W: 390, H: cl(window.innerHeight / this.state.zoom, 560, 900), S: 0.47 } : GEO_D; }
+  // tempo da abertura na escala da M8 (roda a 0,5×); com "reduzir movimento" no sistema, já começa pronta
+  heroTime(now) { const th = this.since('hero', now); return REDUCED ? HT : th < 0 ? 0 : Math.min(th * HERO_SPEED, HT); }
+  paintHero(now) {
+    const cv = this.heroCv;
+    if (!cv) return;
+    const Q = this.heroQ(), t = this.heroTime(now), pr = Math.min(3, (window.devicePixelRatio || 1) * this.state.zoom);
+    const pw = Math.round(Q.W * pr), ph = Math.round(Q.H * pr);
+    // depois que assenta, só redesenha se o tamanho mudar
+    const key = (t >= HT ? 'fim' : t) + '|' + pw + '|' + ph + '|' + (this.heroReady ? 1 : 0);
+    if (key === this.heroDrawn) return;
+    this.heroDrawn = key;
+    if (cv.width !== pw) cv.width = pw;
+    if (cv.height !== ph) cv.height = ph;
+    const id = Q.W + 'x' + Q.H + 'x' + Q.S;
+    if (!this.heroZ || this.heroZ.id !== id) this.heroZ = Object.assign(heroGeo(Q), { id: id });
+    heroPaint(cv.getContext('2d'), this.heroReady ? this.heroImg : null, this.heroZ, t, pr);
   }
   since(k, now) { const s = this.t0[k]; return s === null ? -1 : (now - s) / 1000; }
   // dobra atual: na entrada vem da pose da M5; depois, do vetor D (repouso, puxão ou mola)
@@ -1071,6 +1117,7 @@ class Component extends DCLogic {
     this.raf = requestAnimationFrame(tick);
   }
   componentDidUpdate() {
+    this.paintHero(this.state.now);
     this.paintSticker();
     // com um projeto aberto, a página por trás não rola
     const lock = this.state.open >= 0 ? 'hidden' : '';
@@ -1111,8 +1158,7 @@ class Component extends DCLogic {
   }
   renderVals() {
     const now = this.state.now, st = this.state;
-    const th = this.since('hero', now), ta = this.since('about', now), tw = this.since('work', now);
-    const ht = th < 0 ? 0 : Math.min(th, HT);
+    const ta = this.since('about', now), tw = this.since('work', now), ht = this.heroTime(now);
     if (ht >= HT) this.navDone = true;
     const mob = st.mob;
     const common = {
@@ -1124,12 +1170,12 @@ class Component extends DCLogic {
       logos: clientsAt(this.mq.off, mob ? CL_M : CL_D), mqRef: this.mqRef, mqCursor: st.grab ? 'grabbing' : 'grab',
       ctaEnter: this.ctaEnter, ctaLeave: this.ctaLeave, backTop: this.backTop,
       localTime: localTime(),
-      aboutRef: this.aboutRef, workRef: this.workRef, footRef: this.footRef, cvRef: this.cvRef
+      aboutRef: this.aboutRef, workRef: this.workRef, footRef: this.footRef, cvRef: this.cvRef, heroCvRef: this.heroCvRef
     };
     if (mob) {
       const MH = cl(window.innerHeight / st.zoom, 560, 900);
       return Object.assign(common, {
-        hero: heroAt(ht, { W: 390, H: MH, S: 0.47, M: 20 }),
+        hero: { h: r2(MH) },
         work: workAt(tw, st.filter, st.hover, this.setHover, this.openProject, LAY_M),
         ma: aboutAtM(this.mf || 0, ta, this.since('mphoto', now), this.tEndM == null ? -1 : (now - this.tEndM) / 1000, this.flashM ? { i: this.flashM.i, t: (now - this.flashM.t0) / 1000 } : null),
         ovm: this.overlayM(now), ov: { on: false, tiles: [] },
@@ -1137,7 +1183,6 @@ class Component extends DCLogic {
       });
     }
     return Object.assign(common, {
-      hero: heroAt(ht, GEO_D),
       work: workAt(tw, st.filter, st.hover, this.setHover, this.openProject, LAY_D),
       ov: this.overlay(now),
       ovRef: this.ovRef,
