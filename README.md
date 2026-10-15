@@ -40,7 +40,7 @@ src/runtime.js            DCLogic: o componente do canvas como componente Preact
 src/main.js               monta o site em #app
 src/generated/            gerado pelo conversor (view.js, component.js, styles.css)
 public/blob/              imagens do site (capas, galerias, logos, foto)
-public/favicon.png        ícone da aba
+public/favicon.*          ícone da aba (rosto do imagotipo); apple-touch-icon.png para iPhone
 index.html                página, título, metatags e fontes
 vercel.json               build na Vercel (Vite, saída em dist/)
 ```
