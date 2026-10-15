@@ -1,0 +1,887 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Design by Nero — protótipo</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&amp;family=Host+Grotesk:wght@400;800&amp;family=Martian+Mono:wght@400;600&amp;display=swap">
+<style>
+body{margin:0;background:#000}
+html{scroll-behavior:smooth}
+</style>
+</helmet>
+<div style="width: 1440px; zoom: {{ zoom }}; background: #f9f5f5; color: #000; font-family: 'Host Grotesk', system-ui, sans-serif">
+
+  <!-- HEADER FIXO: os links seguem a rolagem -->
+  <nav aria-label="Principal" style="position: fixed; top: 24px; right: 26px; z-index: 30; padding: 10px 14px; background: {{ navBg }}">
+    <ul style="display: flex; gap: 28px; list-style: none; margin: 0; padding: 0; font-size: 12px; font-weight: 800; text-transform: uppercase">
+      <sc-for list="{{ nav }}" as="n" hint-placeholder-count="3">
+        <li style="opacity: {{ n.o }}; transform: translateY({{ n.dy }}px)">
+          <a href="{{ n.href }}" style="display: inline-flex; align-items: center; gap: 7px; color: #fe0000; text-decoration: none">
+            <span aria-hidden="true" style="width: 6px; height: 6px; background: #fe0000; transform: rotate(45deg); opacity: {{ n.on }}"></span>{{ n.label }}
+          </a>
+        </li>
+      </sc-for>
+    </ul>
+  </nav>
+
+  <!-- 01 HOME -->
+  <header id="topo" style="position: relative; height: 810px; overflow: hidden; background: {{ hero.bg }}">
+    <img src="/_blob/f58df74353a40529183de8d338f66b68" alt="" style="position: absolute; left: 0; top: 0; width: 2px; height: 2px; opacity: 0">
+    <img src="/_blob/969a84877293762082cde8c364b566b9" alt="" style="position: absolute; left: 0; top: 0; width: 2px; height: 2px; opacity: 0">
+    <img src="/_blob/b5eb09e0ad93304d2f7d639b307b1cec" alt="" style="position: absolute; left: 0; top: 0; width: 2px; height: 2px; opacity: 0">
+    <img src="/_blob/d19932d0d00c72ad71a1e3c025d3c66f" alt="" style="position: absolute; left: 0; top: 0; width: 2px; height: 2px; opacity: 0">
+    <img src="/_blob/290c2b75dc1a9808de46f4d1a716bb28" alt="" style="position: absolute; left: 0; top: 0; width: 2px; height: 2px; opacity: 0">
+    <img src="/_blob/b4f44df9f0d56bd478f540796d734b72" alt="" style="position: absolute; left: 0; top: 0; width: 2px; height: 2px; opacity: 0">
+    <h1 aria-label="Design by Nero" style="margin: 0">
+      <sc-for list="{{ hero.glyphs }}" as="g" hint-placeholder-count="13">
+        <div style="position: absolute; left: {{ g.x }}px; top: {{ g.y }}px; width: {{ g.w }}px; height: {{ g.h }}px; overflow: hidden; opacity: {{ g.o }}; clip-path: {{ g.clip }}">
+          <img src="{{ g.src }}" alt="" style="position: absolute; left: {{ g.ix }}px; top: {{ g.iy }}px; width: {{ g.iw }}px; height: {{ g.ih }}px; max-width: none">
+        </div>
+      </sc-for>
+    </h1>
+    <div style="position: absolute; left: {{ hero.cursor.x }}px; top: {{ hero.cursor.y }}px; width: {{ hero.cursor.w }}px; height: 5px; background: #fe0000; opacity: {{ hero.cursor.o }}"></div>
+  </header>
+
+  <!-- 02 WORK -->
+  <section id="trabalhos" ref="{{ workRef }}" aria-label="Selected work" style="position: relative; height: {{ work.h }}px; background: #f9f5f5; transition: height .7s cubic-bezier(.16,1,.3,1)">
+    <h2 style="position: absolute; left: 96px; top: 60px; margin: 0; font-family: Anton, Impact, sans-serif; font-weight: 400; font-size: 56px; line-height: 0.9; text-transform: uppercase; display: flex; gap: 14px; align-items: baseline">
+      <span style="opacity: {{ work.head1 }}">Selected</span><span style="opacity: {{ work.head2 }}">work</span>
+    </h2>
+    <div style="position: absolute; right: 96px; top: 66px; display: flex; gap: 6px">
+      <sc-for list="{{ chips }}" as="c" hint-placeholder-count="4">
+        <button type="button" onClick="{{ c.pick }}" style="height: 44px; padding: 0 12px; border: 0; background: {{ c.bg }}; color: {{ c.fg }}; font-family: 'Martian Mono', monospace; font-size: 11px; cursor: pointer">[ {{ c.label }} ]</button>
+      </sc-for>
+    </div>
+
+    <sc-for list="{{ work.cards }}" as="k" hint-placeholder-count="9">
+      <a href="{{ k.href }}" onClick="{{ k.open }}" onMouseEnter="{{ k.enter }}" onMouseLeave="{{ k.leave }}" style="position: absolute; left: {{ k.x }}px; top: {{ k.y }}px; width: 400px; height: 290px; display: {{ k.display }}; color: #000; text-decoration: none">
+        <div style="position: relative; width: 400px; height: 240px; overflow: hidden; background: #d0d0d0">
+          <img src="{{ k.img }}" alt="{{ k.alt }}" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: {{ k.imgO }}; transform: scale({{ k.zoom }}); transition: transform .6s cubic-bezier(.16,1,.3,1)">
+          <div style="position: absolute; left: 0; top: 0; width: 400px; height: 120px; background: #000; opacity: {{ k.blockO }}; transform: translateY({{ k.up }}px)"></div>
+          <div style="position: absolute; left: 0; top: 120px; width: 400px; height: 120px; background: #000; opacity: {{ k.blockO }}; transform: translateY({{ k.down }}px)"></div>
+          <span style="position: absolute; left: 12px; top: 12px; padding: 4px 6px; background: #000; color: #f9f5f5; font-family: 'Martian Mono', monospace; font-size: 10px; opacity: {{ k.hoverO }}">[ OPEN PROJECT ]</span>
+        </div>
+        <svg width="424" height="264" viewBox="0 0 424 264" aria-hidden="true" style="position: absolute; left: -12px; top: -12px; opacity: {{ k.hoverO }}"><path d="M0 14 V0 H14 M410 0 H424 V14 M424 250 V264 H410 M14 264 H0 V250" stroke="#fe0000" stroke-width="2" fill="none"></path></svg>
+        <div style="position: absolute; left: 0; top: 256px; font-family: Anton, Impact, sans-serif; font-size: 28px; line-height: 1; text-transform: uppercase; white-space: nowrap">{{ k.typed }}<span aria-hidden="true" style="color: #fe0000; opacity: {{ k.cur }}">_</span></div>
+        <span style="position: absolute; right: 0; top: 268px; font-family: 'Martian Mono', monospace; font-size: 10px; color: #4f4f4f; white-space: nowrap; opacity: {{ k.metaO }}">{{ k.meta }}</span>
+      </a>
+    </sc-for>
+  </section>
+
+  <!-- 03 CLIENTS — esteira de logos, entre Work e About -->
+  <section aria-label="Clients" style="position: relative; height: 176px; background: #f9f5f5">
+    <div ref="{{ mqRef }}" style="position: absolute; left: 0; top: 40px; width: 1440px; height: 96px; box-sizing: border-box; border-top: 1px solid rgba(0,0,0,.15); border-bottom: 1px solid rgba(0,0,0,.15); overflow: hidden; cursor: {{ mqCursor }}; touch-action: pan-y; user-select: none; -webkit-user-select: none">
+      <sc-for list="{{ logos }}" as="l" hint-placeholder-count="18">
+        <img src="{{ l.src }}" alt="{{ l.alt }}" draggable="false" style="position: absolute; left: {{ l.x }}px; top: {{ l.top }}px; width: {{ l.w }}px; height: {{ l.h }}px; pointer-events: none">
+      </sc-for>
+    </div>
+  </section>
+
+  <!-- 04 ABOUT ME — seção presa: a rolagem vertical move a linha do tempo para o lado.
+       No fim a seta aponta para o "Let's talk", que recebe o efeito de hover dos projetos;
+       a seção segura a tela mais um trecho (pausa) antes de liberar para o rodapé. -->
+  <section id="sobre" ref="{{ aboutRef }}" aria-label="About me" style="position: relative; height: {{ abox.secH }}px">
+    <div style="position: sticky; top: 0; height: {{ abox.panelH }}px; overflow: hidden; background: #f9f5f5">
+      <div style="position: absolute; left: 0; top: 0; width: {{ abox.w }}px; height: 810px; transform: scale({{ abox.s }}); transform-origin: 0 0">
+      <div style="position: absolute; left: 0; top: 0; width: 3600px; height: 810px; transform: translateX({{ about.shiftNeg }}px)">
+        <!-- foto inteira (9:16), à direita do texto -->
+        <div style="position: absolute; left: 580px; top: 150px; width: 306px; height: 544px; background: #d0d0d0; clip-path: inset(0 0 {{ about.photoClip }}% 0); overflow: hidden">
+          <img src="/_blob/479603dfff543771dbfd23f724d36e4f" alt="Gabriel Nero trabalhando no computador" style="display: block; width: 100%; height: 100%; object-fit: cover">
+        </div>
+        <svg width="330" height="568" viewBox="0 0 330 568" aria-hidden="true" style="position: absolute; left: 568px; top: 138px; overflow: visible; opacity: {{ about.focusO }}; transform: scale({{ about.focusS }}); transform-origin: 50% 50%"><path d="M0 16 V0 H16 M314 0 H330 V16 M330 552 V568 H314 M16 568 H0 V552" stroke="#fe0000" stroke-width="2" fill="none"></path></svg>
+        <h2 style="position: absolute; left: 96px; top: 150px; margin: 0; font-family: Anton, Impact, sans-serif; font-weight: 400; font-size: 120px; line-height: 0.88; text-transform: uppercase">
+          <span style="display: block; opacity: {{ about.h1o }}">About</span>
+          <span style="display: block; opacity: {{ about.h2o }}">me</span>
+        </h2>
+        <p style="position: absolute; left: 96px; top: 392px; margin: 0; font-size: 13px; font-weight: 800; text-transform: uppercase; opacity: {{ about.bioO }}">Gabriel Nero — Visual designer &amp; creative strategist</p>
+        <p style="position: absolute; left: 96px; top: 422px; width: 420px; margin: 0; font-size: 16px; line-height: 21.6px; text-transform: uppercase; opacity: {{ about.bioO }}">Graphic designer creating visual identities, campaigns and digital pieces for brands, from research and concept to visual experimentation.</p>
+        <span style="position: absolute; left: 96px; top: 552px; font-family: 'Martian Mono', monospace; font-size: 10px; line-height: 1.7; color: #4f4f4f; opacity: {{ about.eduO }}">MARINGÁ — PR, BRAZIL<br>COMMUNICATION &amp; MULTIMEDIA — UNICESUMAR, 2023–2026</span>
+
+        <!-- trilho tracejado, linha cheia que acompanha a leitura e a seta-espinho no fim -->
+        <div style="position: absolute; left: 960px; top: 600px; width: 2246px; border-top: 1.5px dashed rgba(0,0,0,.35)"></div>
+        <div style="position: absolute; left: 960px; top: 599px; width: {{ about.progW }}px; height: 2px; background: {{ about.lineBg }}"></div>
+        <div style="position: absolute; left: {{ about.flX }}px; top: 599px; width: {{ about.flW }}px; height: 2px; background: #fe0000; box-shadow: 0 0 10px rgba(254, 0, 0, 0.55); opacity: {{ about.flO }}"></div>
+        <svg width="40" height="20" viewBox="0 0 40 20" aria-hidden="true" style="position: absolute; left: 3200px; top: 590px; opacity: {{ about.headO }}; transform: scale({{ about.headS }}); transform-origin: 0 50%"><path d="M0 1 L40 10 L0 19 L9 10 Z" fill="#fe0000"></path></svg>
+
+        <sc-for list="{{ about.stops }}" as="s" hint-placeholder-count="4">
+          <div style="position: absolute; left: {{ s.x }}px; top: 0; width: 500px; height: 810px">
+            <div style="position: absolute; left: 0; top: 452px; display: flex; font-family: Anton, Impact, sans-serif; font-size: 150px; line-height: 0.9; color: {{ s.color }}">
+              <span style="display: block; transform: translateY({{ s.up }}px); background: {{ s.g1 }}; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: transparent">{{ s.y1 }}</span>
+              <span style="display: block; transform: translateY({{ s.down }}px); background: {{ s.g2 }}; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: transparent">{{ s.y2 }}</span>
+            </div>
+            <div style="position: absolute; left: -10px; top: 590px; width: 20px; height: 20px; box-sizing: border-box; border-radius: 50%; border: 3px solid {{ s.ring }}; background: {{ s.fill }}"></div>
+            <span style="position: absolute; left: 0; top: 628px; font-family: 'Martian Mono', monospace; font-size: 11px; color: #4f4f4f; white-space: nowrap">{{ s.period }}</span>
+            <span style="position: absolute; left: 0; top: 652px; font-size: 13px; font-weight: 800; text-transform: uppercase; white-space: nowrap">{{ s.company }} — Graphic designer</span>
+            <div style="position: absolute; left: 0; top: 676px; width: 470px; display: flex; flex-direction: column; gap: 10px">
+              <p style="margin: 0; font-size: 15px; line-height: 20px; text-transform: uppercase; color: #4f4f4f">{{ s.text }}</p>
+              <span style="font-family: 'Martian Mono', monospace; font-size: 10px; color: #000; white-space: nowrap">{{ s.tags }}</span>
+            </div>
+          </div>
+        </sc-for>
+
+        <!-- alvo da seta: o contato, com o mesmo efeito do hover dos projetos -->
+        <a href="#contato" onMouseEnter="{{ ctaEnter }}" onMouseLeave="{{ ctaLeave }}" aria-label="Contact — let's talk" style="position: absolute; left: 3260px; top: 543px; display: block; padding: 14px 18px; color: #000; text-decoration: none">
+          <span style="display: block; font-family: Anton, Impact, sans-serif; font-size: 48px; line-height: 0.9; text-transform: uppercase; white-space: nowrap; color: {{ about.ctaColor }}; transform: scale({{ about.ctaZoom }}); transition: transform .6s cubic-bezier(.16,1,.3,1)">Let’s<br>talk</span>
+          <span aria-hidden="true" style="position: absolute; left: 0; top: 0; width: 14px; height: 14px; border-left: 2px solid #fe0000; border-top: 2px solid #fe0000; opacity: {{ about.ctaO }}"></span>
+          <span aria-hidden="true" style="position: absolute; right: 0; top: 0; width: 14px; height: 14px; border-right: 2px solid #fe0000; border-top: 2px solid #fe0000; opacity: {{ about.ctaO }}"></span>
+          <span aria-hidden="true" style="position: absolute; left: 0; bottom: 0; width: 14px; height: 14px; border-left: 2px solid #fe0000; border-bottom: 2px solid #fe0000; opacity: {{ about.ctaO }}"></span>
+          <span aria-hidden="true" style="position: absolute; right: 0; bottom: 0; width: 14px; height: 14px; border-right: 2px solid #fe0000; border-bottom: 2px solid #fe0000; opacity: {{ about.ctaO }}"></span>
+        </a>
+      </div>
+      </div>
+      <span style="position: absolute; right: 40px; bottom: 36px; font-family: 'Martian Mono', monospace; font-size: 11px; color: #4f4f4f; opacity: {{ about.hintO }}">SCROLL — THE LINE MOVES SIDEWAYS</span>
+    </div>
+  </section>
+
+  <!-- respiro entre o fim do About e o rodapé -->
+  <div aria-hidden="true" style="height: 160px; background: #f9f5f5"></div>
+
+  <!-- 05 FOOTER — sticker -->
+  <footer id="contato" ref="{{ footRef }}" style="position: relative; height: 480px; overflow: hidden; background: #000; color: #f9f5f5; touch-action: pan-y">
+    <canvas ref="{{ cvRef }}" width="1520" height="920" role="img" aria-label="Design by Nero" style="position: absolute; left: 340px; top: 20px; width: 760px; height: 460px; pointer-events: none"></canvas>
+    <span style="position: absolute; right: 40px; top: 40px; font-family: 'Martian Mono', monospace; font-size: 11px; color: #d0d0d0">LOCAL TIME — MARINGÁ {{ localTime }} (GMT−3)</span>
+    <ul style="position: absolute; left: 40px; top: 40px; list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; font-size: 15px; font-weight: 800; text-transform: uppercase">
+      <li><a href="#instagram" style="color: #f9f5f5; text-decoration: none">Instagram</a></li>
+      <li><a href="https://www.behance.net/neeroxvi" target="_blank" rel="noopener" style="color: #f9f5f5; text-decoration: none">Behance</a></li>
+      <li><a href="#linkedin" style="color: #f9f5f5; text-decoration: none">LinkedIn</a></li>
+    </ul>
+    <ul style="position: absolute; left: 40px; bottom: 40px; list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; font-size: 15px; font-weight: 800; text-transform: uppercase">
+      <li><a href="#trabalhos" style="color: #f9f5f5; text-decoration: none">Work</a></li>
+      <li><a href="#sobre" style="color: #f9f5f5; text-decoration: none">About me</a></li>
+    </ul>
+    <a href="#topo" onClick="{{ backTop }}" style="position: absolute; left: 720px; bottom: 40px; transform: translateX(-50%); font-size: 15px; font-weight: 800; text-transform: uppercase; white-space: nowrap; color: #f9f5f5; text-decoration: none">Back to top</a>
+    <a href="mailto:gabrieldelnero.pessoal@gmail.com" style="position: absolute; right: 40px; bottom: 40px; font-size: 15px; font-weight: 800; text-transform: uppercase; color: #f9f5f5; text-decoration: none">gabrieldelnero.pessoal@gmail.com</a>
+  </footer>
+
+  <!-- PROJETO ABERTO (mecânica da Superside): camada fixa; a rolagem do mouse move a galeria na horizontal, com atraso suave;
+       as bordas laterais são áreas de clique que avançam ou voltam meia tela; nome e categoria embaixo à esquerda, descrição à direita -->
+  <sc-if value="{{ ov.on }}" hint-placeholder-val="{{ false }}">
+    <div ref="{{ ovRef }}" role="dialog" aria-modal="true" aria-label="{{ ov.name }}" style="position: fixed; left: 0; top: 0; width: 1440px; height: {{ ov.h }}px; z-index: 50; overflow: hidden; color: #f9f5f5; opacity: {{ ov.o }}; touch-action: none">
+      <div style="position: absolute; inset: 0; background: rgba(0, 0, 0, 0.94); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px)"></div>
+      <div style="position: absolute; inset: 0; transform: translateY({{ ov.dy }}px)">
+        <div style="position: absolute; left: 0; top: 0; width: 1440px; height: 72px; box-sizing: border-box; display: flex; justify-content: space-between; align-items: center; padding: 0 32px; font-family: 'Martian Mono', monospace; font-size: 11px">
+          <span style="color: #d0d0d0">{{ ov.num }} / {{ ov.total }}</span>
+          <div style="display: flex; gap: 6px; align-items: center">
+            <button type="button" onClick="{{ ov.prev }}" style="height: 44px; padding: 0 12px; background: transparent; color: #f9f5f5; border: 0; font: inherit; cursor: pointer">[ ← PREV ]</button>
+            <button type="button" onClick="{{ ov.next }}" style="height: 44px; padding: 0 12px; background: transparent; color: #f9f5f5; border: 0; font: inherit; cursor: pointer">[ NEXT → ]</button>
+            <a href="{{ ov.href }}" target="_blank" rel="noopener" style="display: inline-flex; align-items: center; height: 44px; padding: 0 12px; color: #f9f5f5; text-decoration: none">[ BEHANCE ↗ ]</a>
+            <button type="button" onClick="{{ ov.close }}" style="height: 44px; padding: 0 14px; background: #fe0000; color: #000; border: 0; font: inherit; cursor: pointer">[ CLOSE ✕ ]</button>
+          </div>
+        </div>
+        <div style="position: absolute; left: 0; top: {{ ov.top }}px; width: 1440px; height: {{ ov.galH }}px; overflow: hidden">
+          <div style="position: absolute; left: 0; top: 0; width: {{ ov.trackW }}px; height: {{ ov.galH }}px; transform: translate3d({{ ov.shift }}px, 0, 0); will-change: transform">
+            <sc-for list="{{ ov.tiles }}" as="t" hint-placeholder-count="6">
+              <div style="position: absolute; left: {{ t.x }}px; top: {{ t.y }}px; width: {{ t.w }}px; height: {{ t.h }}px; overflow: hidden; background: #141414; opacity: {{ t.o }}; transform: translateX({{ t.dx }}px)">
+                <img src="{{ t.src }}" alt="{{ t.alt }}" decoding="async" draggable="false" style="display: block; width: 100%; height: 100%; object-fit: cover; user-select: none">
+              </div>
+            </sc-for>
+          </div>
+          <sc-if value="{{ ov.canL }}" hint-placeholder-val="{{ false }}">
+            <button type="button" aria-label="Scroll left" onClick="{{ ov.goL }}" onMouseEnter="{{ ov.enterL }}" onMouseLeave="{{ ov.leaveZ }}" style="position: absolute; left: 0; top: 0; width: 288px; height: 100%; padding: 0; border: 0; background: transparent; cursor: pointer">
+              <span style="position: absolute; left: 32px; top: 50%; margin-top: -18px; height: 36px; padding: 0 12px; display: inline-flex; align-items: center; background: #f9f5f5; color: #000; font-family: 'Martian Mono', monospace; font-size: 11px; opacity: {{ ov.zoneL }}">[ ← ]</span>
+            </button>
+          </sc-if>
+          <sc-if value="{{ ov.canR }}" hint-placeholder-val="{{ true }}">
+            <button type="button" aria-label="Scroll right" onClick="{{ ov.goR }}" onMouseEnter="{{ ov.enterR }}" onMouseLeave="{{ ov.leaveZ }}" style="position: absolute; right: 0; top: 0; width: 288px; height: 100%; padding: 0; border: 0; background: transparent; cursor: pointer">
+              <span style="position: absolute; right: 32px; top: 50%; margin-top: -18px; height: 36px; padding: 0 12px; display: inline-flex; align-items: center; background: #f9f5f5; color: #000; font-family: 'Martian Mono', monospace; font-size: 11px; opacity: {{ ov.zoneR }}">[ → ]</span>
+            </button>
+          </sc-if>
+        </div>
+        <div style="position: absolute; left: 32px; top: {{ ov.infoTop }}px; width: 1376px; opacity: {{ ov.infoO }}">
+          <div style="display: flex; align-items: center; gap: 16px; font-family: 'Martian Mono', monospace; font-size: 11px; color: #d0d0d0">
+            <span style="width: 120px">{{ ov.hint }}</span>
+            <div style="position: relative; flex: 1; height: 1px; background: #4f4f4f">
+              <div style="position: absolute; left: 0; top: -1px; height: 3px; width: {{ ov.prog }}%; background: #fe0000"></div>
+            </div>
+            <span style="width: 120px; text-align: right">[ {{ ov.seen }} / {{ ov.count }} ]</span>
+          </div>
+          <div style="display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 48px; align-items: end; margin-top: 22px">
+            <div style="display: flex; flex-direction: column; gap: 10px">
+              <h3 style="margin: 0; font-family: Anton, Impact, sans-serif; font-weight: 400; font-size: 64px; line-height: 0.9; text-transform: uppercase">{{ ov.name }}</h3>
+              <span style="font-family: 'Martian Mono', monospace; font-size: 11px; color: #d0d0d0">[ {{ ov.cat }} ]</span>
+            </div>
+            <p style="margin: 0; justify-self: end; max-width: 560px; font-size: 15px; line-height: 1.5; color: #d0d0d0">{{ ov.desc }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":5396}}'>
+// ---------- comum
+const cl = (v, a, b) => Math.max(a === undefined ? 0 : a, Math.min(b === undefined ? 1 : b, v));
+const seg = (t, a, b) => cl((t - a) / (b - a));
+const expo = x => x >= 1 ? 1 : 1 - Math.pow(2, -10 * x);
+const cubicOut = x => 1 - Math.pow(1 - x, 3);
+const inOut = x => x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
+const backOut = x => { const c1 = 1.70158, c3 = c1 + 1; return 1 + c3 * Math.pow(x - 1, 3) + c1 * Math.pow(x - 1, 2); };
+const lerp = (a, b, k) => a + (b - a) * k;
+const r2 = v => Math.round(v * 100) / 100;
+
+// ---------- 01 HOME — a mesma abertura da prancha M1
+const HW = 1440, HH = 810, HT = 2.9, S = 0.72;
+const HLW = 746 * S, HLH = 487 * S, LX = (HW - HLW) / 2, LY = (HH - HLH) / 2;
+const SRC = { red: '/_blob/f58df74353a40529183de8d338f66b68', black: '/_blob/969a84877293762082cde8c364b566b9', paper: '/_blob/b5eb09e0ad93304d2f7d639b307b1cec' };
+const SRC_R = { red: '/_blob/d19932d0d00c72ad71a1e3c025d3c66f', black: '/_blob/290c2b75dc1a9808de46f4d1a716bb28', paper: '/_blob/b4f44df9f0d56bd478f540796d734b72' };
+const BG = { paper: '#f9f5f5', red: '#fe0000', black: '#000000' };
+const INK = { paper: 'red', red: 'black', black: 'paper' };
+const G = [[0,120,0,240,0],[131,232,0,240,0],[241,361,0,240,0],[370,415,0,240,0],[426,544,0,240,0],[557,686,0,240,0],[702,746,0,56,0],
+           [0,118,247,487,1],[105,240,247,487,1],[247,376,247,487,1],[389,490,247,487,1],[500,617,247,487,1],[628,746,247,487,1]];
+// o braço do Y entra na área do B: as duas caixas se sobrepõem e cada letra é recortada pela diagonal entre elas
+const CLIP = { 7: 'polygon(0% 0%, 88.98% 0%, 95.76% 20.42%, 100% 23.75%, 100% 100%, 0% 100%)', 8: 'polygon(0% 0%, 100% 0%, 100% 100%, 9.63% 100%, 9.63% 23.75%, 5.93% 20.42%)' };
+const CORNER = [0, 7, 9, 6];
+const CSC = i => i === 6 ? 2.44 : 0.5;
+const bgAt = t => t < 0.55 ? 'paper' : t < 0.82 ? 'red' : t < 1.38 ? 'black' : t < 2.02 ? 'red' : 'paper';
+function heroGlyph(i, x, y, sc, o, ink) {
+  const g = G[i], w = (g[1] - g[0]) * S * sc, h = (g[3] - g[2]) * S * sc;
+  if (i === 6) return { x: r2(x), y: r2(y), w: r2(w), h: r2(h), ix: 0, iy: 0, iw: r2(w), ih: r2(h), o: o, src: SRC_R[ink], clip: 'none' };
+  return { x: r2(x), y: r2(y), w: r2(w), h: r2(h), ix: r2(-g[0] * S * sc), iy: r2(-g[2] * S * sc), iw: r2(746 * S * sc), ih: r2(487 * S * sc), o: o, src: SRC[ink], clip: CLIP[i] || 'none' };
+}
+function cornerBox(ci) {
+  const i = CORNER[ci], g = G[i], w = (g[1] - g[0]) * S * CSC(i), h = (g[3] - g[2]) * S * CSC(i);
+  const dy = i === 6 ? h * 5 / 56 : 0;
+  const pos = [[48, 48], [HW - 48 - w, 48], [48, HH - 48 - h + dy], [HW - 48 - w, HH - 48 - h + dy]][ci];
+  return { x: pos[0], y: pos[1], w: w, h: h };
+}
+function heroAt(t) {
+  const bg = bgAt(t), ink = INK[bg], out = [];
+  for (let i = 0; i < 13; i++) {
+    const g = G[i], hx = LX + g[0] * S, hy = LY + g[2] * S, w = (g[1] - g[0]) * S, h = (g[3] - g[2]) * S;
+    const dir = g[4] === 0 ? -1 : 1;
+    let x = hx, y = hy, sc = 1, o = 1;
+    if (t >= 0.30 && t < 0.82) {
+      const k = t < 0.55 ? 120 * expo(seg(t, 0.30, 0.55)) : 120 + 80 * cubicOut(seg(t, 0.55, 0.82));
+      x = hx + dir * k * 0.5; y = hy + dir * k * 0.8;
+    } else if (t >= 0.82 && t < 2.02) {
+      const ci = CORNER.indexOf(i);
+      if (ci < 0 || t >= 1.38) { o = 0; }
+      else { const c = cornerBox(ci), q = expo(seg(t, 0.82, 1.04)); x = lerp(hx + dir * 100, c.x, q); y = lerp(hy + dir * 160, c.y, q); sc = lerp(1, CSC(i), q); }
+    } else if (t >= 2.02) {
+      const d = i < 6 ? i : i - 1, q = seg(t, 2.02 + d * 0.018, 2.44 + d * 0.018), e = backOut(q);
+      sc = Math.max(0.04, lerp(0.04, 1, e)); x = lerp(HW / 2 - w * 0.02, hx, e); y = lerp(HH / 2 - h * 0.02, hy, e);
+      if (q <= 0) o = 0;
+    }
+    if (i === 6 && t >= 2.02) { if (t < 2.76) o = 0; else { x = hx; y = hy; sc = 1; o = 1; } }
+    out.push(heroGlyph(i, x, y, sc, o, ink));
+  }
+  if (t >= 1.38 && t < 2.02) {
+    const n = 8, head = (n - 1) * cubicOut(seg(t, 1.38, 1.66)), tail = (n - 1) * seg(t, 1.70, 2.00);
+    for (let ci = 0; ci < 4; ci++) {
+      const c = cornerBox(ci), i = CORNER[ci], ccx = c.x + c.w / 2, ccy = c.y + c.h / 2;
+      for (let k = 0; k < n; k++) {
+        if (k > head + 1e-6 || k < tail - 1e-6) continue;
+        const f = Math.pow(0.06, k / (n - 1)), sc = CSC(i) * f;
+        const cx = HW / 2 + (ccx - HW / 2) * f, cy = HH / 2 + (ccy - HH / 2) * f;
+        const w = (G[i][1] - G[i][0]) * S * sc, h = (G[i][3] - G[i][2]) * S * sc;
+        out.push(heroGlyph(i, cx - w / 2, cy - h / 2, sc, 1, ink));
+      }
+    }
+  }
+  const curOn = (t >= 2.55 && t < 2.62) || (t >= 2.69 && t < 2.76);
+  const cursor = { x: r2(LX + 702 * S), y: r2(LY + 50 * S), w: r2(44 * S), o: curOn ? 1 : 0 };
+  return { bg: BG[bg], glyphs: out, cursor: cursor };
+}
+// menu fixo: aparece no fim da abertura e marca a seção atual com o losango
+// mesma ordem da página: Work → About me → Contact
+const NAV = [['Work', '#trabalhos', 'work'], ['About me', '#sobre', 'about'], ['Contact', '#contato', 'foot']];
+const NAV_T = [2.62, 2.68, 2.74];
+
+// ---------- 02 WORK — projetos do Behance; capas escolhidas por ele (originais do Behance; Spraytec é o arquivo enviado)
+const B = 'https://www.behance.net/gallery/';
+const PROJECTS = [
+  { name: 'Spraytec', cat: 'Social media', href: B + '256902267/Spraytec-Social-Media', img: '/_blob/e7f19856c871c5ef387f099efe4821d4' },
+  { name: 'Luxor', cat: 'Brand identity', href: B + '239555381/Luxor-Brand-Identity', img: '/_blob/2b1f8e4f2f69dccc8bcfa40645c75821' },
+  { name: 'Canephora', cat: 'Brand identity', href: B + '239552047/Canephora-Brand-Identity', img: '/_blob/73e12f4c12ce5c6b4edbdf5c31fbf4d1' },
+  { name: 'Masochism', cat: 'Photoshoot', href: B + '243248871/Masochism-Photoshoot', img: '/_blob/663d3b37b5c5da561b5814289bb67eae' },
+  { name: 'Vine Nero', cat: 'Brand identity', href: B + '123859133/Vine-Nero-Brand-Identity', img: '/_blob/0f82841e5134a548dcc6a1db274e40bf' },
+  { name: 'Colmeiaas', cat: 'Brand identity', href: B + '242713149/Colmeiaas-Brand-Identity', img: '/_blob/6402bb762ce2e734df94b513c33a8c75' },
+  { name: 'Lumen', cat: 'Brand identity', href: B + '237688227/Lumen-Brand-Identity', img: '/_blob/92a6f30eed9b5272fcea90e00b13fd82' },
+  { name: 'Vineyards Del Nero', cat: 'Brand identity', href: B + '214191025/Vineyards-Del-Nero-Brand-Identity', img: '/_blob/c44cdd932efa5665dcefc90d22a1600f' },
+  { name: 'SusySol', cat: 'Brand identity', href: B + '217420003/SusySol-Brand-Identity', img: '/_blob/cb887eae6e924b489086cd7f33bbc029' },
+  // sem página no Behance ainda: o botão leva ao perfil
+  { name: 'Marketing Médico', cat: 'Social media', href: 'https://www.behance.net/neeroxvi', img: '/_blob/075297bd34f57ba801c89515489ab947' }
+];
+const FILTERS = ['All', 'Brand identity', 'Social media', 'Photoshoot'];
+// sem filtro escolhido, a seção mostra só os 3 destaques, nesta ordem: Colmeiaas, Vine Nero e Luxor
+const FEATURED = [5, 4, 1];
+const visibleIdx = filter => filter === 'Selected' ? FEATURED : PROJECTS.map((p, i) => i).filter(i => filter === 'All' || PROJECTS[i].cat === filter);
+// chave da galeria de cada projeto e o texto do próprio Behance, quando existe
+const KEYS = ['spraytec', 'luxor', 'canephora', 'masochism', 'vine-nero', 'colmeiaas', 'lumen', 'vineyards', 'susysol', 'medico'];
+const DESC = {
+  'vine-nero': 'Vine Nero goes beyond the traditional in the fitness world. With a passion for bodybuilding and a deep interest in neuroscience, he brings an approach that seamlessly integrates body and mind.',
+  'colmeiaas': 'The name Colmeiaas carries two central meanings: Colmeia (beehive), a metaphor for collaboration, structure and collective work, and IAAS — Artificial Intelligence & Assisted Solutions — AI as strategic support, not as a human replacement.',
+  'lumen': 'The Lumen brand was born to illuminate medical communication and build real bridges between healthcare professionals and their patients — a visual and verbal identity built on trust, science, empathy and purpose.',
+  'susysol': 'The visual and verbal identity for SusySol, a bridal boutique, was designed to capture the timeless essence of love and celebration while incorporating a touch of innovation.',
+  'medico': 'Social media for doctors and health professionals: carousels, reel covers and podcast thumbnails that turn medical topics into clear, editorial and trustworthy content, with a human tone that invites people to stop and read.'
+};
+// todas as imagens de cada projeto no Behance: [arquivo, largura, altura] (os 2 quadros pretos de Vine Nero ficaram de fora)
+const GALLERY = {
+  'canephora': [['99c1fb3f288b871887c25acb75ad898c', 1000, 562], ['4724f483c45a421dde6a2c1f780d54e2', 1000, 562], ['ee11eb3e62edcf0110a32084f53518ff', 1000, 562], ['aed21b3ddf11d1ae093c0c816b1575f2', 1000, 562], ['32fba0490a75f9b864b75cfb4926b906', 1000, 562], ['9a147ed6b4a7d38f66839d1469470002', 1000, 562], ['6bfe7bf974422dcd2ed2dbe13494bc59', 1000, 562], ['0fb584158c112602586f999741e01ecb', 1000, 562], ['641c1f296557c5206e272cb9002ce0e3', 1000, 562], ['37fc88c3eb0263e3470945af60daf731', 1000, 562], ['5f9df3bd41d86b909c9f2964b8eb4070', 1000, 562], ['fcb7acae5fb28497766de3e9180c61c6', 1000, 562], ['118a40284613e804408695d6fc2a26eb', 1000, 562], ['65211c78d03a625dd7d67db7f919603f', 1000, 562], ['72d5236593ed587b7285308e65c75d6b', 1000, 562], ['0041962dcd5cc2bb7dc01eaa7b8e1f37', 1000, 562], ['79c34bb2c14aa6d224add5b63da0d9f5', 1000, 562]],
+  'colmeiaas': [['a503d909fea9c972d7b23e8690204dd5', 1000, 562], ['7588aed518e494d8d7b88df8da232704', 1000, 562], ['1259f748046d4e79bf9fda47cb0efbe6', 1000, 562], ['b9a7a316943ab285b936dfc2a633340e', 1000, 562], ['f049815247b35e51df1f50ca4a5f6242', 1000, 562], ['1e8a046103c6a4d2ac2c32a5b5ad01aa', 1000, 562], ['fec49cef20d45ab966fe2313e89c86c7', 1000, 562], ['d97433f93f6b265ae55ef907b2bb244e', 1000, 562], ['d320cbb2728eb97473bd52c68f8e2e91', 1000, 562], ['fc4b03813e7a9a6a4d349a8afc130453', 1000, 562], ['e992917df32be879880a3f3c9c40cbbb', 1000, 562], ['0e9db882f3be19e59556ee4e78aa3f26', 1000, 562], ['1a8a857eeda796f0e1e914a6dadeb2a9', 1000, 562], ['d15c8f8e1e3f6c157331b5c169790a30', 1000, 562], ['aeef932e00b2e4110fa52daad837cec3', 1000, 562], ['50a785f104c649ea6b9bccd6beaf7c28', 1000, 562], ['5817a7efa188c766de910f8e03a288b7', 1000, 562], ['3802c087044f37d54f1087ced376bc86', 1000, 562], ['226326d55a8bd27ce6a7cdd2d670d018', 1000, 562], ['78cdda41658f8d38b96e8561ac91db31', 1000, 562], ['761a1fef4f21113ec71bf9980ae8b8d1', 1000, 562]],
+  'lumen': [['77025a6ab8ecae883e3b33aec6997033', 1000, 562], ['6c22799f2c476fbf1e71dec1ccfd0f44', 1000, 562], ['665a87a50c6e602e6d7c17a7e55ed8cb', 1000, 562], ['dd76f60d3afb47e578b7b20da522f13f', 1000, 562], ['dcba2e4f83ebb37f4054a5cf92417e1c', 1000, 569], ['9030c69a77c8d3a1fc2cb552da297416', 1000, 562], ['875d4cf679cc7fdd03a313343fb98c11', 1000, 562], ['e5166e367e73ba592465da60716ee23f', 1000, 562], ['90475b69a0e76f22319d8093d257e438', 1000, 562], ['effb373f601b1a1d28cda906a45ab0f3', 1000, 562], ['7ac2ffcf21c0d143ad200ed7e3e2c7a6', 1000, 562]],
+  'luxor': [['70b324a7d7d1ba8e2a4215d40e4ddf3b', 1000, 562], ['9d827985354fd232cf02feca5cd6b9f0', 1000, 562], ['0d284853215f65d9619ed603c849c040', 1000, 562], ['08a6663039ba0d492c8776d4a80a8ba7', 1000, 562], ['5c62a8f11d8ac1c50e7cb1f18a452259', 1000, 562], ['38bcb31aa381fce67d7b6d9b2f60383b', 1000, 562], ['9b4fdcc392b93b4d9a851de556bf9467', 1000, 562], ['bccd40b5642b6e4eee57f298ea834c53', 1000, 562], ['6846acc3fc75bcfedc10fb29d9ef7b48', 1000, 562], ['db173b75911eb5265f8b36fd4428750e', 1000, 562], ['84be678cf31315774a81e23239b98a44', 1000, 562], ['9b9aece28bfc803bf06d505b98af9ad8', 1000, 562], ['5c9b18d8f98cce01d37d937e057ced56', 1000, 667], ['6129a58e109cef6d348d81cc4e323ec2', 1000, 562], ['0c0d602ab9c23e62b9a9b33de3c418a5', 1000, 562], ['85473360db6ab29ccba537500a91e26e', 1000, 562]],
+  'masochism': [['376094b67c2460a0e08395d914e718f3', 1000, 562], ['6ec743692661fd3d440b33c1a44c6444', 1000, 1000], ['aaa945d2423a015d8db1a448e1dd9547', 1000, 1000], ['dc9e13a172055a1c32fc47d47859d899', 1000, 1000], ['63f4b34d81f932efc269314bbc21b260', 1000, 1000], ['fc96dc5af5681d2783aa8ed6393d8462', 1000, 562], ['35eb1a4fc57ddecf0d761ccb57f7c15e', 1000, 1000], ['13102f3f7990e726b158631172737695', 1000, 1000], ['db0c431001f9d3b96fdc7ee7fe57d4e2', 1000, 1000], ['1534ff96f49f5c072fe4763a3ace8bff', 1000, 1000], ['21d20114855858fb08265f73f1f5ee3e', 1000, 1000], ['04d62750930bb1bdaa9cecccda52dafe', 1000, 562], ['a7e29d991b11006b4eb95ba41e9a30d4', 1000, 562], ['868af6625a77a1eb5d070794eba0586c', 1000, 562]],
+  'spraytec': [['cd0643e482433dda6a9f224676eb2b6e', 1000, 282], ['6eedd1f5e0577c1f24674f1751f2b662', 1000, 562], ['44b0e5202013f036d1ad1eede9080055', 1000, 1250], ['46bb084ff7137e1700faa47ac9666662', 1000, 1250], ['82a284744486d66b284ea27a02517ab2', 1000, 1250], ['f0342d783404816d028ea8c00096c220', 1000, 1250], ['48957a500178ceae947c7e33252bef50', 1000, 1250], ['12486139762b821ac3c7e5cd6539e7c9', 1000, 1250], ['08ac36eb7d0c22cd338f201cb266c97d', 1000, 1250], ['a744200878d740366537ad49c06b50f6', 1000, 1250], ['980c83ea5a3fdeddf40c796a484bfc48', 1000, 1250], ['921ada18c1c7700a4e379dd7244a5213', 1000, 1250], ['f9b56d814f90a0ffee27c2e68c785ab7', 1000, 1250], ['2aa71d9669b170a0d711f514cb3506a4', 1000, 562], ['1a9f94a9aabd60c54a20524f6f805279', 1000, 562], ['4f7d8f3865009a8a5a74c7d7aa1529cf', 1000, 282]],
+  'susysol': [['97b29e4c8d55daf7837b1d70342e3e80', 1000, 562], ['244e669492e20e8af9565e89a89bee65', 1000, 562], ['c2f0c1c593e61bbe6ed3c76513aa17ce', 1000, 365], ['b747d6a5d829bc4186294e8af02a45a3', 1000, 562], ['4227dc9eeafceab6e738f15102fb0606', 1000, 1000], ['d3326780b18c049b247f61b3b8ba7a2a', 1000, 1000], ['128846f22223186fb5240ceed2be5332', 1000, 1000], ['c5b0259a806aad4c097918c1c8934c34', 1000, 1091], ['254358e02fd1b8cf1e028b203b634bad', 1000, 848]],
+  'vine-nero': [['b0f54af07f70a2de290e5a462ea25e63', 1000, 562], ['2f08a31423c767196ab5bf7f2f6682c2', 1000, 562], ['a7d0dc7d2d0ce7adb4b84c1cdf46366d', 1000, 562], ['69d6ec16d74c0ef49ee8a9a92ae01df5', 1000, 562], ['6fa26c34eced9fbca5f2cfa9d3b57bee', 1000, 562], ['be24fc16c7bf9ae6485071c8a5a39e62', 1000, 562], ['7a701fbf4d08dd4890355eb62ddc9d2f', 1000, 562], ['6c58030069c8a18575eaf094c6c1aeca', 1000, 562], ['23508115690d1fb5e6cd3e8492065301', 1000, 562], ['5c12e0d1fb28292de515ac6804032ccc', 1000, 562], ['8d90cb72454b91d3cc75e7bcc28f752a', 1000, 562], ['8ec1b67e8cd9efa0941156981440bf0c', 1000, 562], ['e9b671101e47cccf725fbcc183ab2f45', 1000, 562]],
+  'vineyards': [['63ceaab0169c37815d5d17db994b43ca', 1000, 562], ['148e484afb80f3e76bf23605dacb40e0', 1000, 562], ['b401ee9117588bc9f244da4f2a67bbf9', 1000, 562], ['5d2dcbe59d29d24b902536700e6a4042', 1000, 562], ['e533fabef5e3de75dfc67c60b7231d1f', 1000, 562], ['ce62350438d7a96d149887c614853f6e', 1000, 562], ['95250694c3f8e285364a974030e6b511', 1000, 562], ['2576050287094034365e9de53a6eebf5', 1000, 562], ['4fa5d00a56e3d40af1ee074674a806ff', 1000, 1000], ['efd0eecef5d1222248d7b9555263418d', 1000, 1000], ['14f89443fce48186ce51fc3ed625485d', 1000, 1000], ['30ee724b7f2485f522ec59d6122c93b9', 1000, 562]],
+  // capas de reels, thumbnails do podcast Além do Peso e, no fim, o carrossel "5 sinais" na ordem (a capa, a mão azul, fica só no card)
+  'medico': [['296fa951e605afe2f34235a2653fa304', 1000, 1778], ['2566b493e631202ecd6d368a4f94d29e', 1000, 1778], ['ef790420c5cfa54c74cf876508a64209', 1000, 1778], ['12d3b11226229f1ca534514ad7d6c8c6', 1000, 1778], ['6ad2c362f0e55ab318078c6581f45a47', 1000, 1778], ['d09605fa8e5e97fc69128cd68ee3963d', 1000, 1778], ['442479ee365f8ee8115ed4f6f912992d', 1000, 1778], ['fad1ef27d393f9518a6a3b9f0f62a1f6', 1000, 1778], ['c5703f71ffa31c9995724007844712b6', 1000, 1778], ['c6c38a039a76cc7d9b42bc259b431f08', 1000, 562], ['231b3e49395ded4b707b99fad66babc8', 1000, 562], ['4deab39787069e39eaf1e4a25cdca546', 1000, 562], ['dc0646eba7c6033167959fde6c32eb10', 1000, 562], ['9395289f715ce672aed1a8293f4d8f15', 1000, 1250], ['9579369b8dfe344085ba037ccffe7315', 1000, 1250], ['e542a60f21a347c1a1963b4ca0c18022', 1000, 1250], ['449b83f56176f32d6046c292cd5cf107', 1000, 1250], ['f38d166e0c2e766b2c2e433416d91b3a', 1000, 1250], ['1cb5a17a843b29a06077538cda50e8dd', 1000, 1250]]
+};
+// ---------- PROJETO ABERTO — a mecânica da Superside
+// A galeria é uma faixa horizontal de colunas com 1 ou 2 imagens, sem cortes: no par, a largura da coluna é calculada
+// para as duas alturas somarem a altura da faixa. Retratos ficam sozinhos; a cada 3 colunas entra uma imagem grande sozinha.
+// Banners muito largos sempre formam par.
+const OV_PAD = 32, OV_GAP = 16, OV_TOP = 72, OV_BOTTOM = 168, OV_ZONE = 288;
+const ratio = it => it[1] / it[2];
+function galleryLayout(key, galH) {
+  const g = GALLERY[key], n = g.length, cols = [];
+  let k = 0, x = OV_PAD;
+  while (k < n) {
+    const a = g[k], b = g[k + 1], ra = ratio(a), rb = b ? ratio(b) : 0;
+    let pair = false;
+    if (ra >= 1 && b && rb >= 1) {
+      if (ra > 2.6 || rb > 2.6) pair = true;
+      else if (n - k === 3 && ratio(g[k + 2]) > 2.6) pair = false;
+      else pair = cols.length % 3 !== 0;
+    }
+    const items = [];
+    let w;
+    if (pair) {
+      w = (galH - OV_GAP) / (1 / ra + 1 / rb);
+      items.push({ it: a, y: 0, h: w / ra }, { it: b, y: w / ra + OV_GAP, h: w / rb });
+      k += 2;
+    } else {
+      w = ra > 2.6 ? Math.min(galH * ra, 1100) : galH * ra;
+      const h = w / ra;
+      items.push({ it: a, y: (galH - h) / 2, h: h });
+      k += 1;
+    }
+    cols.push({ x: x, w: w, items: items });
+    x += w + OV_GAP;
+  }
+  return { cols: cols, trackW: x - OV_GAP + OV_PAD };
+}
+function overlayAt(i, t, vis, galH, gx, maxShift, zone) {
+  const p = PROJECTS[i], key = KEYS[i], L = galleryLayout(key, galH), tiles = [];
+  let num = 0, seen = 0;
+  L.cols.forEach((c, ci) => {
+    // entrada: cada coluna desliza da direita com um pequeno atraso
+    const q = expo(seg(t, 0.10 + ci * 0.05, 0.60 + ci * 0.05));
+    c.items.forEach(s => {
+      num++;
+      if (c.x - gx < 1440 - 120) seen = num;
+      tiles.push({ src: '/_blob/' + s.it[0], alt: p.name + ' — ' + num, x: r2(c.x), y: r2(s.y), w: r2(c.w), h: r2(s.h), o: r2(cl(q * 1.4)), dx: r2(60 * (1 - q)) });
+    });
+  });
+  const j = vis.indexOf(i), pad = v => (v < 10 ? '0' : '') + v;
+  return {
+    on: true, name: p.name, cat: p.cat.toUpperCase(), href: p.href, desc: DESC[key] || '', tiles: tiles,
+    num: pad(j + 1), total: pad(vis.length), top: OV_TOP, galH: r2(galH), trackW: r2(L.trackW), shift: r2(-gx),
+    infoTop: r2(OV_TOP + galH + 26), infoO: r2(cubicOut(seg(t, 0.2, 0.5))),
+    prog: r2(cl((gx + 1440) / L.trackW) * 100), seen: pad(seen), count: pad(num),
+    hint: gx < 6 ? 'SCROLL →' : gx >= maxShift - 6 ? 'END' : '',
+    canL: gx > 6, canR: gx < maxShift - 6, zoneL: zone === 'l' ? 1 : 0, zoneR: zone === 'r' ? 1 : 0
+  };
+}
+function workAt(t, filter, hover, setHover, openFn) {
+  const visible = visibleIdx(filter).map(i => ({ p: PROJECTS[i], i: i }));
+  const cards = PROJECTS.map((p, i) => {
+    const j = visible.findIndex(o => o.i === i), base = { href: p.href, name: p.name, alt: p.name + ' — ' + p.cat, img: p.img, enter: () => setHover(i), leave: () => setHover(-1), open: (e) => { if (e && e.preventDefault) e.preventDefault(); openFn(i); } };
+    if (j < 0) return Object.assign(base, { x: 0, y: 0, display: 'none', imgO: 0, blockO: 0, up: 0, down: 0, typed: '', cur: 0, metaO: 0, meta: '', hoverO: 0, zoom: 1 });
+    const ti = 0.10 + j * 0.09, q = expo(seg(t, ti + 0.12, ti + 0.50));
+    const typeStart = ti + 0.30, chars = Math.floor(cl((t - typeStart) / 0.035, 0, p.name.length)), typeEnd = typeStart + p.name.length * 0.035;
+    const isHover = hover === i && t >= typeEnd;
+    return Object.assign(base, {
+      x: 96 + (j % 3) * 424, y: 150 + Math.floor(j / 3) * 340, display: 'block',
+      imgO: t >= ti + 0.12 ? 1 : 0, blockO: t >= ti && t < ti + 0.52 ? 1 : 0, up: r2(-124 * q), down: r2(124 * q),
+      typed: p.name.slice(0, chars), cur: t >= typeStart && t < typeEnd + 0.18 && Math.floor(t * 12) % 2 === 0 ? 1 : 0,
+      metaO: t >= typeEnd ? 1 : 0, meta: '[ ' + p.cat.toUpperCase() + ' ]',
+      hoverO: isHover ? 1 : 0, zoom: isHover ? 1.04 : 1
+    });
+  });
+  // altura da seção: 150 de topo, linhas de 340, card de 290 e respiro de 80 no fim
+  return { cards: cards, h: 150 + (Math.ceil(visible.length / 3) - 1) * 340 + 290 + 80, head1: t >= 0 ? 1 : 0, head2: t >= 0.06 ? 1 : 0 };
+}
+
+// ---------- 03 CLIENTS — logos oficiais em uma tinta (cinza do isotipo); altura ajustada pelo peso visual de cada um
+// Esteira contínua: anda sozinha a MQ_SPEED px/s; segurando com o mouse (ou o dedo) a faixa segue a mão e, ao soltar,
+// continua com o embalo do gesto até voltar à velocidade normal.
+const CLIENTS = [
+  { alt: 'Spraytec', src: '/_blob/ad31eb73f5f743975a20b4fca51cea38', ratio: 612 / 120, h: 38 },
+  { alt: 'Oral-B', src: '/_blob/bfe77362a824a002af7d9289a186dbb7', ratio: 358 / 120, h: 34 },
+  { alt: 'Eurogarden Maringá', src: '/_blob/183a3f25b70d9f846deed911e4025e16', ratio: 224 / 120, h: 54 },
+  { alt: 'Quinta dos Plátanos', src: '/_blob/be79dd2dcdd8f6483ae6190248b98b1c', ratio: 388 / 120, h: 52 },
+  { alt: 'Recmart', src: '/_blob/44248c0be9f585e657625659996bbb65', ratio: 920 / 120, h: 26 },
+  { alt: 'FreeFaro', src: '/_blob/134cacdc10fcbe8499aa722c79800c02', ratio: 108.232 / 40.974, h: 34 },
+  { alt: 'Vow Digital', src: '/_blob/609dd9e104642b569ff26e6c57920393', ratio: 706 / 120, h: 32 },
+  { alt: 'Wave Garden Residence Club', src: '/_blob/57ae7c8608b528948887095c2bdbfbb0', ratio: 241 / 120, h: 56 },
+  { alt: 'Colégio Platão', src: '/_blob/50cf7e6c0fd683bc4b262c4c268a3443', ratio: 108 / 120, h: 56 }
+];
+const SLOT = 260, SET_W = CLIENTS.length * SLOT, MQ_SPEED = 70;
+function clientsAt(offset) {
+  const m = ((offset % SET_W) + SET_W) % SET_W, out = [];
+  for (let k = 0; k < CLIENTS.length * 2; k++) {
+    const c = CLIENTS[k % CLIENTS.length], w = c.h * c.ratio;
+    out.push({ src: c.src, alt: k < CLIENTS.length ? c.alt : '', x: r2(k * SLOT - m + (SLOT - w) / 2), top: r2((94 - c.h) / 2), w: r2(w), h: c.h });
+  }
+  return out;
+}
+
+// ---------- 04 ABOUT ME — dados do currículo
+// p = progresso da rolagem lateral (0 a 1); ta = tempo desde que a seção entrou; te = tempo desde que a linha chegou ao fim
+// A_SHIFT: quanto a faixa anda; com p = 1 o "Let's talk" para em x = 1160 na tela, com a seta a 20 px dele
+const A_SHIFT = 2100, READ = 760, LINE0 = 960, LINE1 = 3206, XS = [1060, 1620, 2180, 2740];
+// textos tirados do currículo (Downloads\Currículo.pdf), em inglês como o resto do site
+const INFO = [
+  { y: '2023', company: 'Lady Linda', period: '2023 – 02/2024',
+    text: 'Campaigns, ad creatives and graphic materials, plus photo and video production and pieces for digital, print and internal communication.',
+    tags: 'CAMPAIGNS · ADS · PHOTO & VIDEO · PRINT · INTERNAL COMMS' },
+  { y: '2024', company: 'Colégio Platão', period: '02/2024 – 07/2024',
+    text: 'Digital and print materials for the school’s communication, photo and video production and editing, and content for social media.',
+    tags: 'PRINT · DIGITAL · PHOTO & VIDEO · SOCIAL MEDIA' },
+  { y: '2025', company: 'Vow Digital', period: '04/2025 – 04/2026',
+    text: 'Campaigns, digital pieces and social content, graphics for websites and other formats, plus video editing and finishing — with AI in the process.',
+    tags: 'CAMPAIGNS · SOCIAL · WEB · VIDEO EDITING · AI' },
+  { y: '2026', company: 'Recmart', period: '04/2026 – now',
+    text: 'Key visuals, campaigns and rollouts across channels for clients like Eurogarden and Spraytec, plus planning, concepts and presentations.',
+    tags: 'KEY VISUALS · CAMPAIGNS · PLANNING · CONCEPTS · AI' }
+];
+// YW.w = largura do "20" em Anton 150 px (medida quando a fonte carrega); a segunda metade do ano começa ali
+const YW = { w: 160 };
+// b = frente da linha medida a partir da borda esquerda deste pedaço do ano; tip = até onde a ponta vermelha pode ir;
+// q = 0..1: no ano atual, depois que a linha passa dele inteiro, o preto recua e o número fica todo vermelho (destaque)
+function yearFill(b, tip, q) {
+  if (b <= 0) return 'linear-gradient(#4f4f4f, #4f4f4f)';
+  const t = Math.min(b, tip), k = lerp(t - 200, -6000, q);
+  return 'linear-gradient(90deg, #000 ' + r2(k) + 'px, #fe0000 ' + r2(t) + 'px, #4f4f4f ' + r2(t) + 'px)';
+}
+function aboutAt(p, ta, te, ctaHover, flash) {
+  const shift = p * A_SHIFT;
+  // a linha cheia acompanha o ponto de leitura e, no último trecho da rolagem, corre até a seta
+  const front = lerp(READ + shift, LINE1, cubicOut(seg(p, 0.85, 1)));
+  let active = -1;
+  XS.forEach((x, i) => { if (x - shift <= READ) active = i; });
+  const stops = XS.map((x, i) => {
+    const delta = READ - (x - shift), amt = delta >= 0 && delta < 90 ? 18 * Math.sin(Math.PI * delta / 90) : 0;
+    const st = i === active ? 'now' : i < active ? 'past' : 'next';
+    return {
+      x: x, period: INFO[i].period, company: INFO[i].company, text: INFO[i].text, tags: INFO[i].tags,
+      y1: INFO[i].y.slice(0, 2), y2: INFO[i].y.slice(2), up: r2(-amt), down: r2(amt),
+      ...(() => {
+        // ano atual: ponta vermelha presa ao fim do número e, 120 px depois, vermelho por inteiro; anos passados: preto
+        const W = 2 * YW.w, now = st === 'now', tip = now ? W : Infinity, q = now ? cl((front - x - W) / 120) : 0;
+        return { g1: yearFill(front - x, tip, q), g2: yearFill(front - x - YW.w, tip - YW.w, q) };
+      })(),
+      color: st === 'now' ? '#fe0000' : st === 'past' ? '#000000' : '#4f4f4f',
+      ring: st === 'now' ? '#fe0000' : '#000000', fill: st === 'now' ? '#fe0000' : st === 'past' ? '#000000' : '#f9f5f5'
+    };
+  });
+  // a linha cheia termina numa ponta vermelha (200 px em degradê); ao chegar num ano, o trecho desde o ano anterior acende em vermelho e apaga em ~1 s
+  const progW = cl(front - LINE0, 0, LINE1 - LINE0);
+  let fl = { x: LINE0, w: 0, o: 0 };
+  if (flash && flash.i >= 0 && flash.t < 1.1) {
+    const x0 = flash.i === 0 ? LINE0 : XS[flash.i - 1];
+    fl = { x: x0, w: XS[flash.i] - x0, o: r2(0.9 * Math.min(1, flash.t / 0.08) * (1 - cubicOut(seg(flash.t, 0.08, 1.1)))) };
+  }
+  // fim da linha (te >= 0): a ponta salta, os cantos vermelhos cercam o "Let's talk" e a etiqueta aparece
+  const reached = te >= 0;
+  const ctaOn = (reached && te >= 0.24) || ctaHover;
+  return {
+    shiftNeg: r2(-shift), photoClip: ta < 0.05 ? 100 : ta < 0.15 ? 62 : ta < 0.25 ? 30 : 0,
+    // foco: os cantos entram um pouco abertos, fecham sobre a foto e piscam uma vez, como o autofoco de uma câmera
+    focusO: ta < 0.30 || (ta > 0.46 && ta < 0.52) ? 0 : 1, focusS: r2(1 + 0.06 * (1 - expo(seg(ta, 0.30, 0.62)))),
+    h1o: ta >= 0.30 ? 1 : 0, h2o: ta >= 0.40 ? 1 : 0, bioO: ta >= 0.52 ? 1 : 0, eduO: ta >= 0.62 ? 1 : 0,
+    progW: r2(progW), lineBg: 'linear-gradient(90deg, #000 ' + r2(Math.max(0, progW - 200)) + 'px, #fe0000 ' + r2(Math.max(1, progW)) + 'px)',
+    flX: fl.x, flW: fl.w, flO: fl.o, stops: stops,
+    hintO: p < 0.03 ? 1 : 0,
+    headO: reached ? 1 : 0, headS: r2(reached ? backOut(seg(te, 0, 0.22)) : 0),
+    ctaO: ctaOn ? 1 : 0, ctaZoom: ctaOn ? 1.04 : 1,
+    ctaColor: reached || ctaHover ? '#000000' : '#d0d0d0'
+  };
+}
+
+// ---------- 05 FOOTER — sticker
+// Entrada: a mesma da prancha M5. O adesivo inteiro cai girando, é pressionado e assenta com o canto do rosto solto.
+// Depois que assenta (ST_IN), dá para segurar o rosto e puxar: ele dobra e resiste, mas não descola, e volta com uma mola ao soltar.
+const ST_IMG = '/_blob/b4f779fad62c687c4a39682be8f6106a';
+const ST_LW = 460, ST_K = ST_LW / 1546, ST_LH = 825 * ST_K, HEAD_X = 786 * ST_K;
+const CW = 760, CH = 460, DPR = 2, CX = 380, CY = 230;
+const deg = d => d * Math.PI / 180;
+const ST_ROT = deg(-3);
+const N0 = (() => { const l = Math.hypot(0.62, 0.78); return { x: 0.62 / l, y: 0.78 / l }; })();
+const ST_IN = 1.40;                     // fim da entrada (s)
+const REST = 34;                        // profundidade da dobra em repouso
+const PULL = 180, PULL_ANG = 0.7;       // puxão máximo e quanto a direção da dobra pode girar (rad)
+const rotV = (v, a) => ({ x: v.x * Math.cos(a) - v.y * Math.sin(a), y: v.x * Math.sin(a) + v.y * Math.cos(a) });
+// pose do adesivo durante a entrada: escala, giro, queda e profundidade da dobra
+function poseAt(t) {
+  if (t < 0.10) return null;
+  const q = seg(t, 0.10, 0.55);
+  let s = lerp(1.35, 1, cubicOut(q));
+  if (t >= 0.55) s = 1 - 0.03 * Math.sin(Math.PI * seg(t, 0.55, 0.75));
+  const rot = lerp(-10, -3, cubicOut(q)) * Math.PI / 180, dy = lerp(-60, 0, backOut(q));
+  const depth = t >= 0.55 ? lerp(150, REST, cubicOut(seg(t, 0.55, ST_IN))) : 150;
+  return { s: s, rot: rot, dy: dy, depth: depth };
+}
+function halfPlane(g, n, f, sign) {
+  const L = 4000, fx = n.x * f, fy = n.y * f, tx = -n.y, ty = n.x;
+  g.beginPath(); g.moveTo(fx + tx * L, fy + ty * L); g.lineTo(fx - tx * L, fy - ty * L);
+  g.lineTo(fx - tx * L + sign * n.x * L, fy - ty * L + sign * n.y * L); g.lineTo(fx + tx * L + sign * n.x * L, fy + ty * L + sign * n.y * L); g.closePath();
+}
+// sem pose = posição final (escala 1, −3°), a mesma em que o adesivo assenta
+function place(g, p) {
+  g.setTransform(DPR, 0, 0, DPR, 0, 0);
+  g.translate(CX, CY + (p ? p.dy : 0)); g.rotate(p ? p.rot : ST_ROT); const s = p ? p.s : 1; g.scale(s, s); g.translate(-ST_LW / 2, -ST_LH / 2);
+}
+// D = vetor que vai da ponta dobrada até o canto solto; a linha da dobra é a mediatriz entre os dois.
+// Em repouso a dobra "respira" de leve, como no fim da M5.
+function restD(t) {
+  const k = t - ST_IN, depth = REST + 5 * Math.sin(k * 2.9), n = rotV(N0, deg(2.4) * Math.sin(k * 2.1));
+  return { x: 2 * depth * n.x, y: 2 * depth * n.y };
+}
+// limites do puxão: a direção gira no máximo PULL_ANG e o tamanho cresce cada vez menos (resistência), até PULL
+function clampD(D) {
+  // componentes ao longo de N0 (quanto descola) e de lado; empurrar além do canto só deixa a dobra mínima
+  const al = Math.max(3, D.x * N0.x + D.y * N0.y), lim = al * Math.tan(PULL_ANG);
+  const ac = cl(D.x * -N0.y + D.y * N0.x, -lim, lim), L = Math.hypot(al, ac);
+  const L2 = L > 2 * REST ? 2 * REST + (PULL - 2 * REST) * Math.tanh((L - 2 * REST) / (PULL - 2 * REST)) : L, q = L2 / L;
+  return { x: (al * N0.x - ac * N0.y) * q, y: (al * N0.y + ac * N0.x) * q };
+}
+function localTime() {
+  try { return new Date().toLocaleTimeString('pt-BR', { timeZone: 'America/Sao_Paulo', hour12: false }); }
+  catch (e) { return '00:00:00'; }
+}
+
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { now: 0, zoom: 1, filter: 'Selected', hover: -1, cta: false, open: -1, zone: '', grab: false };
+    // esteira de clientes: off = deslocamento atual; vel = embalo extra que se dissipa; drag = gesto em andamento
+    this.mq = { off: 0, vel: 0, drag: null };
+    this.onMqDown = (e) => {
+      if (e.pointerType === 'mouse' && e.button !== 0) return;
+      e.preventDefault();
+      try { this.mqEl.setPointerCapture(e.pointerId); } catch (err) {}
+      this.mq.drag = { x: e.clientX, off: this.mq.off, lx: e.clientX, t: performance.now(), v: 0 };
+      this.setState({ grab: true });
+    };
+    this.onMqMove = (e) => {
+      const d = this.mq.drag;
+      if (!d) return;
+      const z = this.state.zoom, now = performance.now(), dt = Math.max(1, now - d.t);
+      this.mq.off = d.off - (e.clientX - d.x) / z;
+      d.v = d.v * 0.5 + (-(e.clientX - d.lx) / z / (dt / 1000)) * 0.5;
+      d.lx = e.clientX; d.t = now;
+    };
+    this.onMqUp = () => {
+      const d = this.mq.drag;
+      if (!d) return;
+      // parado por mais de 90 ms antes de soltar = sem embalo
+      const v = performance.now() - d.t > 90 ? 0 : d.v;
+      this.mq.vel = cl(v, -3000, 3000) - MQ_SPEED;
+      this.mq.drag = null;
+      this.setState({ grab: false });
+    };
+    this.mqRef = (el) => {
+      if (el === this.mqEl) return;
+      const ev = [['pointerdown', this.onMqDown], ['pointermove', this.onMqMove], ['pointerup', this.onMqUp], ['pointercancel', this.onMqUp], ['lostpointercapture', this.onMqUp]];
+      if (this.mqEl) ev.forEach(p => this.mqEl.removeEventListener(p[0], p[1]));
+      this.mqEl = el;
+      if (el) ev.forEach(p => el.addEventListener(p[0], p[1]));
+    };
+    // galeria do projeto aberto: gT = destino pedido pela rolagem, gx = posição atual, que persegue o destino a cada quadro
+    this.gx = 0; this.gT = 0; this.gMax = 0; this.tOpen = 0; this.tClose = null;
+    this.push = (d) => { this.gT = cl(this.gT + d, 0, this.gMax); };
+    this.onWheel = (e) => {
+      e.preventDefault();
+      const d = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
+      this.push(d * (e.deltaMode === 1 ? 40 : e.deltaMode === 2 ? 800 : 1) / this.state.zoom);
+    };
+    this.onTouchStart = (e) => { const p = e.touches[0]; this.touch = { x: p.clientX, y: p.clientY }; };
+    this.onTouchMove = (e) => {
+      if (!this.touch) return;
+      e.preventDefault();
+      const p = e.touches[0], dx = this.touch.x - p.clientX, dy = this.touch.y - p.clientY;
+      this.push((Math.abs(dx) > Math.abs(dy) ? dx : dy) * 1.6 / this.state.zoom);
+      this.touch = { x: p.clientX, y: p.clientY };
+    };
+    this.ovRef = (el) => {
+      if (el === this.ovEl) return;
+      if (this.ovEl) { this.ovEl.removeEventListener('wheel', this.onWheel); this.ovEl.removeEventListener('touchstart', this.onTouchStart); this.ovEl.removeEventListener('touchmove', this.onTouchMove); }
+      this.ovEl = el;
+      if (el) { el.addEventListener('wheel', this.onWheel, { passive: false }); el.addEventListener('touchstart', this.onTouchStart, { passive: true }); el.addEventListener('touchmove', this.onTouchMove, { passive: false }); }
+    };
+    this.visible = () => visibleIdx(this.state.filter);
+    this.openProject = (i) => {
+      const now = performance.now();
+      if (this.state.open < 0) this.tOpen = now;
+      this.t0ov = now; this.tClose = null; this.gx = 0; this.gT = 0;
+      this.setState({ open: i, hover: -1, zone: '' });
+    };
+    this.closeProject = () => { if (this.state.open >= 0 && this.tClose === null) this.tClose = performance.now(); };
+    this.step = (d) => { const v = this.visible(), j = v.indexOf(this.state.open); this.openProject(v[(j + d + v.length) % v.length]); };
+    this.goL = () => this.push(-720);
+    this.goR = () => this.push(720);
+    this.enterL = () => this.setState({ zone: 'l' });
+    this.enterR = () => this.setState({ zone: 'r' });
+    this.leaveZ = () => this.setState({ zone: '' });
+    this.onKey = (e) => {
+      if (this.state.open < 0) return;
+      if (e.key === 'Escape') this.closeProject();
+      else if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === 'PageDown') { e.preventDefault(); this.push(480); }
+      else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp' || e.key === 'PageUp') { e.preventDefault(); this.push(-480); }
+    };
+    this.t0 = { hero: null, about: null, work: null, foot: null };
+    this.active = ''; this.p = 0; this.tEnd = null;
+    this.aboutRef = (el) => { this.aboutEl = el; };
+    this.workRef = (el) => { this.workEl = el; };
+    this.onStDown = (e) => {
+      if (e.pointerType === 'mouse' && e.button !== 0) return;
+      if (!this.cv || !this.sp) return;
+      const p = this.toLocal(e);
+      if (!this.hitSticker(p)) return;
+      e.preventDefault();
+      try { this.footEl.setPointerCapture(e.pointerId); } catch (err) {}
+      this.sp.drag = { p0: p, D0: { x: this.sp.D.x, y: this.sp.D.y } };
+      this.sp.V = { x: 0, y: 0 };
+      this.footEl.style.cursor = 'grabbing';
+    };
+    this.onStMove = (e) => {
+      if (!this.cv || !this.sp) return;
+      const p = this.toLocal(e), d = this.sp.drag;
+      // puxar para longe do canto solto descola mais; empurrar na direção dele alisa
+      if (d) { this.sp.D = clampD({ x: d.D0.x - (p.x - d.p0.x), y: d.D0.y - (p.y - d.p0.y) }); return; }
+      if (e.pointerType === 'mouse') this.footEl.style.cursor = this.hitSticker(p) ? 'grab' : '';
+    };
+    this.onStUp = () => {
+      if (!this.sp || !this.sp.drag) return;
+      this.sp.drag = null;
+      if (this.footEl) this.footEl.style.cursor = '';
+    };
+    this.footRef = (el) => {
+      if (el === this.footEl) return;
+      const ev = [['pointerdown', this.onStDown], ['pointermove', this.onStMove], ['pointerup', this.onStUp], ['pointercancel', this.onStUp], ['lostpointercapture', this.onStUp]];
+      if (this.footEl) ev.forEach(p => this.footEl.removeEventListener(p[0], p[1]));
+      this.footEl = el;
+      if (el) ev.forEach(p => el.addEventListener(p[0], p[1]));
+    };
+    this.cvRef = (el) => { this.cv = el; this.paintSticker(); };
+    this.setHover = (i) => { if (this.state.hover !== i) this.setState({ hover: i }); };
+    // pedido de replay da abertura; vale por 5 s, para não disparar mais tarde se a pessoa desistir no meio do caminho
+    this.backTop = () => { this.replayAt = performance.now(); };
+    this.ctaEnter = () => this.setState({ cta: true });
+    this.ctaLeave = () => this.setState({ cta: false });
+    this.img = new Image();
+    this.img.onload = () => { this.prepareSticker(); this.ready = true; };
+    this.img.src = ST_IMG;
+  }
+  layer(w, h) { const c = document.createElement('canvas'); c.width = w; c.height = h; return c; }
+  prepareSticker() {
+    this.sil = this.layer(Math.ceil(ST_LW * DPR), Math.ceil(ST_LH * DPR));
+    const s = this.sil.getContext('2d');
+    s.drawImage(this.img, 0, 0, ST_LW * DPR, ST_LH * DPR); s.globalCompositeOperation = 'source-in'; s.fillStyle = '#ffffff'; s.fillRect(0, 0, this.sil.width, this.sil.height);
+    this.flap = this.layer(CW * DPR, CH * DPR);
+    this.dmax = -1e9; this.dmin = 1e9; this.K = null;
+    try {
+      const w = Math.ceil(ST_LW), h = Math.ceil(ST_LH), c = this.layer(w, h), g = c.getContext('2d');
+      g.drawImage(this.img, 0, 0, ST_LW, ST_LH);
+      const a = g.getImageData(0, 0, w, h).data;
+      this.alpha = a; this.aw = w; this.ah = h;
+      for (let y = 0; y < h; y++) for (let x = 0; x < Math.min(w, HEAD_X); x++) {
+        if (a[(y * w + x) * 4 + 3] <= 40) continue;
+        const d = x * N0.x + y * N0.y;
+        if (d > this.dmax) { this.dmax = d; this.K = { x: x, y: y }; }
+        if (d < this.dmin) this.dmin = d;
+      }
+    } catch (e) { this.K = { x: 225, y: 240 }; this.dmax = 225 * N0.x + 240 * N0.y; this.dmin = 0; }
+    if (!this.K) { this.K = { x: 225, y: 240 }; this.dmax = 225 * N0.x + 240 * N0.y; this.dmin = 0; }
+  }
+  since(k, now) { const s = this.t0[k]; return s === null ? -1 : (now - s) / 1000; }
+  // dobra atual: na entrada vem da pose da M5; depois, do vetor D (repouso, puxão ou mola)
+  foldNow(t) {
+    if (!this.K) return null;
+    if (t < ST_IN || !this.sp) {
+      const p = poseAt(Math.min(t, ST_IN));
+      if (!p) return null;
+      return { pose: p, n: N0, h: this.dmax - p.depth, depth: p.depth };
+    }
+    const D = this.sp.D, L = Math.max(3, Math.hypot(D.x, D.y)), n = { x: D.x / L, y: D.y / L };
+    return { pose: null, n: n, h: this.K.x * n.x + this.K.y * n.y - L / 2, depth: L / 2 };
+  }
+  stepSticker(ts, dt) {
+    const t = this.since('foot', ts);
+    if (t < ST_IN || !this.K) return;
+    if (!this.sp) this.sp = { D: restD(t), V: { x: 0, y: 0 }, drag: null };
+    const sp = this.sp;
+    if (sp.drag) return;
+    // mola levemente subamortecida: volta para o repouso com um pequeno balanço
+    const T = restD(t), k = Math.min(dt, 32) / 1000;
+    sp.V.x += (-260 * (sp.D.x - T.x) - 16 * sp.V.x) * k; sp.V.y += (-260 * (sp.D.y - T.y) - 16 * sp.V.y) * k;
+    sp.D.x += sp.V.x * k; sp.D.y += sp.V.y * k;
+  }
+  // ponteiro → coordenadas do adesivo (desfaz posição, giro e escala da tela)
+  toLocal(e) {
+    const r = this.cv.getBoundingClientRect();
+    const p = rotV({ x: (e.clientX - r.left) * CW / r.width - CX, y: (e.clientY - r.top) * CH / r.height - CY }, -ST_ROT);
+    return { x: p.x + ST_LW / 2, y: p.y + ST_LH / 2 };
+  }
+  // o mouse pega no rosto colado ou na aba dobrada (o nome é impresso, não pega)
+  hitSticker(p) {
+    if (!this.alpha) return false;
+    const f = this.foldNow(this.since('foot', this.state.now));
+    if (!f || f.pose) return false;
+    const A = q => { const x = Math.round(q.x), y = Math.round(q.y); return x >= 0 && y >= 0 && x < Math.min(this.aw, HEAD_X) && y < this.ah && this.alpha[(y * this.aw + x) * 4 + 3] > 40; };
+    const d = p.x * f.n.x + p.y * f.n.y - f.h;
+    if (d > 0) return false;
+    return A(p) || A({ x: p.x - 2 * d * f.n.x, y: p.y - 2 * d * f.n.y });
+  }
+  paintSticker() {
+    const cv = this.cv;
+    if (!cv || !this.ready) return;
+    const x = cv.getContext('2d');
+    x.setTransform(1, 0, 0, 1, 0, 0); x.clearRect(0, 0, cv.width, cv.height);
+    const t = this.since('foot', this.state.now), f = this.foldNow(t);
+    if (!f) return;
+    const P = f.pose, n = f.n;
+    // 1. o nome, sempre colado
+    x.save(); place(x, P); x.beginPath(); x.rect(HEAD_X, -20, ST_LW - HEAD_X + 20, ST_LH + 40); x.clip(); x.drawImage(this.img, 0, 0, ST_LW, ST_LH); x.restore();
+    // 2. o rosto, só a parte colada (antes da dobra)
+    x.save(); place(x, P); x.beginPath(); x.rect(-20, -20, HEAD_X + 20, ST_LH + 40); x.clip(); halfPlane(x, n, f.h, -1); x.clip(); x.drawImage(this.img, 0, 0, ST_LW, ST_LH); x.restore();
+    // 3. aba dobrada: a parte do rosto além da dobra, espelhada, mostrando o verso do papel
+    const fl = this.flap.getContext('2d');
+    fl.setTransform(1, 0, 0, 1, 0, 0); fl.globalCompositeOperation = 'source-over'; fl.clearRect(0, 0, this.flap.width, this.flap.height);
+    fl.save(); place(fl, P);
+    fl.transform(1 - 2 * n.x * n.x, -2 * n.x * n.y, -2 * n.x * n.y, 1 - 2 * n.y * n.y, 2 * f.h * n.x, 2 * f.h * n.y);
+    fl.beginPath(); fl.rect(-20, -20, HEAD_X + 20, ST_LH + 40); fl.clip(); halfPlane(fl, n, f.h, 1); fl.clip();
+    fl.drawImage(this.sil, 0, 0, ST_LW, ST_LH);
+    fl.globalCompositeOperation = 'source-atop';
+    const gx = fl.createLinearGradient(n.x * f.h, n.y * f.h, n.x * (f.h + f.depth), n.y * (f.h + f.depth));
+    gx.addColorStop(0, '#8e8a8a'); gx.addColorStop(0.18, '#cdc9c9'); gx.addColorStop(0.6, '#ebe7e7'); gx.addColorStop(1, '#f7f3f3');
+    fl.fillStyle = gx; fl.fillRect(-200, -200, ST_LW + 400, ST_LH + 400);
+    fl.restore();
+    // 4. sombra da aba (cresce um pouco quando a aba é puxada), depois a aba
+    const big = Math.max(0, f.depth - REST - 5);
+    x.save(); x.setTransform(1, 0, 0, 1, 0, 0); x.globalAlpha = 0.55; x.filter = 'blur(' + r2(6 + big * 0.06) + 'px) brightness(0)'; x.drawImage(this.flap, -6 - big * 0.06, 12 + big * 0.12); x.restore();
+    x.save(); x.setTransform(1, 0, 0, 1, 0, 0); x.drawImage(this.flap, 0, 0); x.restore();
+    // 5. brilho que atravessa o adesivo uma vez
+    const gl = seg(t, 1.25, 1.85);
+    if (gl > 0 && gl < 1) {
+      x.save(); place(x, P); x.globalCompositeOperation = 'source-atop';
+      const bx = lerp(-160, ST_LW + 160, gl), gg = x.createLinearGradient(bx - 70, -40, bx + 70, 40);
+      gg.addColorStop(0, 'rgba(255,255,255,0)'); gg.addColorStop(0.5, 'rgba(255,255,255,0.5)'); gg.addColorStop(1, 'rgba(255,255,255,0)');
+      x.fillStyle = gg; x.fillRect(-200, -200, ST_LW + 400, ST_LH + 400); x.restore();
+    }
+  }
+  measure(ts) {
+    const vh = window.innerHeight;
+    if (this.replayAt) {
+      const se = document.scrollingElement || document.documentElement;
+      if (ts - this.replayAt > 5000) this.replayAt = 0;
+      else if (se.scrollTop < 4) { this.replayAt = 0; this.t0.hero = ts; }
+    }
+    let active = '';
+    if (this.workEl) {
+      const r = this.workEl.getBoundingClientRect();
+      if (this.t0.work === null && r.top < vh * 0.7) this.t0.work = ts;
+      if (r.top <= vh * 0.4) active = 'work';
+    }
+    if (this.aboutEl) {
+      const r = this.aboutEl.getBoundingClientRect(), z = this.state.zoom;
+      // a faixa anda durante A_SHIFT px de rolagem; os 360 px seguintes são a pausa com o "Let's talk" aceso
+      this.p = cl(-r.top / (A_SHIFT * z));
+      if (this.t0.about === null && r.top < vh * 0.5) this.t0.about = ts;
+      const sh = this.p * A_SHIFT;
+      let ai = -1;
+      XS.forEach((x, i) => { if (x - sh <= READ) ai = i; });
+      if (this.lastStop === undefined) this.lastStop = ai;
+      if (ai !== this.lastStop) { if (ai >= 0) this.flash = { i: ai, t0: ts }; this.lastStop = ai; }
+      if (this.p >= 0.985 && this.tEnd === null) this.tEnd = ts;
+      if (this.p < 0.9) this.tEnd = null;
+      if (r.top <= vh * 0.4) active = 'about';
+    }
+    if (this.footEl) {
+      const r = this.footEl.getBoundingClientRect();
+      if (this.t0.foot === null && r.top < vh * 0.85) this.t0.foot = ts;
+      if (r.top <= vh * 0.6) active = 'foot';
+    }
+    this.active = active;
+  }
+  componentDidMount() {
+    this.onResize = () => this.setState({ zoom: Math.max(0.2, window.innerWidth / 1440) });
+    window.addEventListener('resize', this.onResize); this.onResize();
+    window.addEventListener('keydown', this.onKey);
+    const measureYear = () => { try { const g = document.createElement('canvas').getContext('2d'); g.font = '150px Anton'; const w = g.measureText('20').width; if (w > 0) YW.w = w; } catch (e) {} };
+    measureYear();
+    try { if (document.fonts && document.fonts.load) document.fonts.load('150px Anton').then(measureYear); } catch (e) {}
+    let last = 0;
+    const tick = (ts) => {
+      this.raf = requestAnimationFrame(tick);
+      if (this.t0.hero === null) this.t0.hero = ts;
+      this.measure(ts);
+      // a galeria persegue o destino com atraso (como a Superside), igual em qualquer taxa de quadros
+      const dt = last ? Math.min(64, ts - last) : 16.7; last = ts;
+      this.gx += (this.gT - this.gx) * (1 - Math.pow(0.86, dt / 16.7));
+      if (Math.abs(this.gT - this.gx) < 0.2) this.gx = this.gT;
+      this.stepSticker(ts, dt);
+      if (!this.mq.drag) { this.mq.vel *= Math.pow(0.05, dt / 1000); this.mq.off += (MQ_SPEED + this.mq.vel) * dt / 1000; }
+      if (this.tClose !== null && ts - this.tClose > 260) { this.tClose = null; this.setState({ open: -1, now: ts, zone: '' }); return; }
+      this.setState({ now: ts });
+    };
+    this.raf = requestAnimationFrame(tick);
+  }
+  componentDidUpdate() {
+    this.paintSticker();
+    // com um projeto aberto, a página por trás não rola
+    const lock = this.state.open >= 0 ? 'hidden' : '';
+    if (document.body.style.overflow !== lock) { document.body.style.overflow = lock; document.documentElement.style.overflow = lock; }
+  }
+  componentWillUnmount() { cancelAnimationFrame(this.raf); window.removeEventListener('resize', this.onResize); window.removeEventListener('keydown', this.onKey); this.ovRef(null); this.mqRef(null); this.footRef(null); }
+  overlay(now) {
+    const st = this.state;
+    if (st.open < 0) return { on: false, tiles: [] };
+    const H = window.innerHeight / st.zoom, galH = cl(H - OV_TOP - OV_BOTTOM, 300, 900);
+    this.gMax = Math.max(0, galleryLayout(KEYS[st.open], galH).trackW - 1440);
+    if (this.gT > this.gMax) this.gT = this.gMax;
+    // abre: o fundo escurece e o conteúdo sobe 30 px; fecha: tudo some em 0,26 s
+    const to = (now - this.tOpen) / 1000, tc = this.tClose === null ? 0 : seg((now - this.tClose) / 1000, 0, 0.26);
+    return Object.assign(overlayAt(st.open, (now - this.t0ov) / 1000, this.visible(), galH, this.gx, this.gMax, st.zone), {
+      h: r2(H), o: r2(cubicOut(seg(to, 0, 0.32)) * (1 - tc)), dy: r2(30 * (1 - expo(seg(to, 0, 0.5))) + 20 * tc),
+      close: this.closeProject, prev: () => this.step(-1), next: () => this.step(1),
+      goL: this.goL, goR: this.goR, enterL: this.enterL, enterR: this.enterR, leaveZ: this.leaveZ
+    });
+  }
+  renderVals() {
+    const now = this.state.now, st = this.state;
+    const th = this.since('hero', now), ta = this.since('about', now), tw = this.since('work', now);
+    const ht = th < 0 ? 0 : Math.min(th, HT);
+    if (ht >= HT) this.navDone = true;
+    return {
+      zoom: st.zoom,
+      hero: heroAt(ht),
+      nav: NAV.map((l, j) => ({ label: l[0], href: l[1], o: ht >= NAV_T[j] || this.navDone ? 1 : 0, dy: ht >= NAV_T[j] + 0.08 || this.navDone ? 0 : 6, on: this.active === l[2] ? 1 : 0 })),
+      navBg: this.active ? 'rgba(249, 245, 245, 0.94)' : 'transparent',
+      work: workAt(tw, st.filter, st.hover, this.setHover, this.openProject),
+      ov: this.overlay(now),
+      ovRef: this.ovRef,
+      // clicar no filtro ativo de novo volta para os 3 destaques
+      chips: FILTERS.map(name => ({ label: name.toUpperCase(), bg: st.filter === name ? '#000' : 'transparent', fg: st.filter === name ? '#f9f5f5' : '#000', pick: () => { this.t0.work = performance.now(); this.setState({ filter: st.filter === name ? 'Selected' : name, hover: -1 }); } })),
+      logos: clientsAt(this.mq.off), mqRef: this.mqRef, mqCursor: st.grab ? 'grabbing' : 'grab',
+      about: aboutAt(this.p, ta, this.tEnd === null ? -1 : (now - this.tEnd) / 1000, st.cta, this.flash ? { i: this.flash.i, t: (now - this.flash.t0) / 1000 } : null),
+      ctaEnter: this.ctaEnter, ctaLeave: this.ctaLeave, backTop: this.backTop,
+      // painel preso do About: altura da janela (entre 520 e 810); abaixo de 810 o conteúdo encolhe por inteiro para nada cortar
+      abox: (() => { const H = cl(window.innerHeight / st.zoom, 520, 810), k = H / 810; return { panelH: r2(H), s: Math.round(k * 10000) / 10000, w: r2(1440 / k), secH: r2(A_SHIFT + 360 + H) }; })(),
+      localTime: localTime(),
+      aboutRef: this.aboutRef, workRef: this.workRef, footRef: this.footRef, cvRef: this.cvRef
+    };
+  }
+}
+</script>
+</body>
+</html>
