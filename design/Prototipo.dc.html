@@ -477,6 +477,10 @@ function heroPaint(x, img, Z, t, pr) {
   }
   x.globalAlpha = 1;
 }
+// convite para rolar: meio segundo depois que a abertura assenta, a página desce um pouco sozinha (px de layout),
+// uma vez só, no carregamento; não acontece se a pessoa já mexeu, se a página abriu fora do topo ou com "reduzir movimento"
+const NUDGE = { D: 140, M: 110, delay: 0.5, dur: 1.2 };
+
 // menu fixo: aparece no fim da abertura e marca a seção atual com o losango
 // mesma ordem da página: Work → About me → Contact
 const NAV = [['Work', '#trabalhos', 'work'], ['About me', '#sobre', 'about'], ['Contact', '#contato', 'foot']];
@@ -874,6 +878,9 @@ class Component extends DCLogic {
       else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp' || e.key === 'PageUp') { e.preventDefault(); this.push(-480); }
     };
     this.t0 = { hero: null, about: null, work: null, foot: null, mphoto: null };
+    // convite para rolar: qualquer gesto da pessoa cancela (e impede que comece)
+    this.nudge = null; this.nudged = false;
+    this.onUserMove = () => { this.nudged = true; this.nudge = null; };
     this.active = ''; this.p = 0; this.tEnd = null;
     this.aboutRef = (el) => { this.aboutEl = el; };
     // celular: trilha vertical do About, foto do About e área que rola dentro do projeto aberto
@@ -965,6 +972,25 @@ class Component extends DCLogic {
     const id = Q.W + 'x' + Q.H + 'x' + Q.S;
     if (!this.heroZ || this.heroZ.id !== id) this.heroZ = Object.assign(heroGeo(Q), { id: id });
     heroPaint(cv.getContext('2d'), this.heroReady ? this.heroImg : null, this.heroZ, t, pr);
+  }
+  // convite para rolar (ver NUDGE): começa uma vez quando a abertura assenta e para se a pessoa rolar por conta própria
+  stepNudge(ts) {
+    const se = document.scrollingElement || document.documentElement;
+    if (!this.nudged) {
+      if (REDUCED || this.state.open >= 0 || this.since('hero', ts) < HT / HERO_SPEED + NUDGE.delay) return;
+      this.nudged = true;
+      if (se.scrollTop > 4) return;
+      const y0 = se.scrollTop;
+      this.nudge = { t0: ts, from: y0, to: y0 + (this.state.mob ? NUDGE.M : NUDGE.D) * this.state.zoom, last: y0 };
+      if (this.t0.work === null) this.t0.work = ts;
+    }
+    const n = this.nudge;
+    if (!n) return;
+    if (Math.abs(se.scrollTop - n.last) > 2) { this.nudge = null; return; }
+    const k = seg((ts - n.t0) / 1000, 0, NUDGE.dur);
+    window.scrollTo({ top: Math.round(n.from + (n.to - n.from) * inOut(k)), behavior: 'instant' });
+    n.last = se.scrollTop;
+    if (k >= 1) this.nudge = null;
   }
   since(k, now) { const s = this.t0[k]; return s === null ? -1 : (now - s) / 1000; }
   // dobra atual: na entrada vem da pose da M5; depois, do vetor D (repouso, puxão ou mola)
@@ -1097,6 +1123,7 @@ class Component extends DCLogic {
     this.onResize = () => this.setState(viewportState());
     window.addEventListener('resize', this.onResize); this.onResize();
     window.addEventListener('keydown', this.onKey);
+    ['wheel', 'touchstart', 'keydown', 'pointerdown'].forEach(ev => window.addEventListener(ev, this.onUserMove, { passive: true }));
     const measureYear = () => { try { const g = document.createElement('canvas').getContext('2d'); g.font = '150px Anton'; const w = g.measureText('20').width; if (w > 0) YW.w = w; } catch (e) {} };
     measureYear();
     try { if (document.fonts && document.fonts.load) document.fonts.load('150px Anton').then(measureYear); } catch (e) {}
@@ -1105,6 +1132,7 @@ class Component extends DCLogic {
       this.raf = requestAnimationFrame(tick);
       if (this.t0.hero === null) this.t0.hero = ts;
       this.measure(ts);
+      this.stepNudge(ts);
       // a galeria persegue o destino com atraso (como a Superside), igual em qualquer taxa de quadros
       const dt = last ? Math.min(64, ts - last) : 16.7; last = ts;
       this.gx += (this.gT - this.gx) * (1 - Math.pow(0.86, dt / 16.7));
@@ -1123,7 +1151,7 @@ class Component extends DCLogic {
     const lock = this.state.open >= 0 ? 'hidden' : '';
     if (document.body.style.overflow !== lock) { document.body.style.overflow = lock; document.documentElement.style.overflow = lock; }
   }
-  componentWillUnmount() { cancelAnimationFrame(this.raf); window.removeEventListener('resize', this.onResize); window.removeEventListener('keydown', this.onKey); this.ovRef(null); this.mqRef(null); this.footRef(null); }
+  componentWillUnmount() { cancelAnimationFrame(this.raf); window.removeEventListener('resize', this.onResize); window.removeEventListener('keydown', this.onKey); ['wheel', 'touchstart', 'keydown', 'pointerdown'].forEach(ev => window.removeEventListener(ev, this.onUserMove)); this.ovRef(null); this.mqRef(null); this.footRef(null); }
   overlay(now) {
     const st = this.state;
     if (st.open < 0) return { on: false, tiles: [] };
